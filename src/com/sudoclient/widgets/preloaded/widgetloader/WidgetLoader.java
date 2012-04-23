@@ -1,10 +1,12 @@
 package com.sudoclient.widgets.preloaded.widgetloader;
 
+import com.sudoclient.widgets.Widgets;
 import com.sudoclient.widgets.api.Widget;
 import com.sudoclient.widgets.api.WidgetPreamble;
 import com.sudoclient.widgets.preloaded.clock.Clock;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.HashMap;
 
 /**
@@ -18,19 +20,32 @@ public class WidgetLoader extends Widget {
     private static HashMap<WidgetPreamble, Class<? extends Widget>> widgetHashMap;
     private JPanel viewField;
     private JTextField search;
+    private Widgets ctx;
 
-    public WidgetLoader() {
-        //viewField = new JPanel(new GridLayout(5, 5, 5, 5));
-        //fillViewField("", 0);
+    public WidgetLoader(Widgets ctx) {
+        this.ctx = ctx;
+        viewField = new JPanel(new GridLayout(3, 0, 5, 5));
+        fillViewField("", 0);
+        add(viewField, BorderLayout.CENTER);
     }
 
-    private static void loadLocalWidgets() {
+    public void consumeWidget(WidgetPreamble preamble) {
+        try {
+            ctx.removeWidget(this);
+            ctx.addWidget(widgetHashMap.get(preamble).newInstance());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void loadLocalWidgets() {
+        widgetHashMap = new HashMap<WidgetPreamble, Class<? extends Widget>>();
         widgetHashMap.put(Clock.class.getAnnotation(WidgetPreamble.class), Clock.class);
     }
 
     private void fillViewField(String text, int page) {
         for (WidgetPreamble widgetPreamble : widgetHashMap.keySet()) {
-            viewField.add(new WidgetLoaderComponent(widgetPreamble));
+            viewField.add(new WidgetLoaderComponent(this, widgetPreamble));
         }
     }
 }

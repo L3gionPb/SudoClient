@@ -1,6 +1,7 @@
 package com.sudoclient.widgets.api;
 
 import com.sudoclient.widgets.Tab;
+import com.sudoclient.widgets.Widgets;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,6 +13,7 @@ import java.awt.*;
  */
 
 public class Widget extends JPanel {
+    private static Widgets ctx = null;
     private Tab tab;
     private int idNum;
     private WidgetPreamble preamble;
@@ -63,6 +65,27 @@ public class Widget extends JPanel {
      */
     public final WidgetPreamble getPreamble() {
         return preamble;
+    }
+
+    /**
+     * Sets the context for this widget (Internal use only)
+     *
+     * @param ctx the context
+     */
+    public static void setContext(Widgets ctx) {
+        if (Widget.ctx != null) {
+            throw new RuntimeException("Widget context cannot be reset");
+        }
+
+        Widget.ctx = ctx;
+    }
+
+    public final int getCtxX() {
+        return ctx.getX();
+    }
+
+    public final int getCtxY() {
+        return ctx.getY();
     }
 
     /**

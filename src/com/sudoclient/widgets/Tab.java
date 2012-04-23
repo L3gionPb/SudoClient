@@ -79,7 +79,7 @@ public class Tab extends JToggleButton implements MouseListener {
         if (widget != null) {
             ctx.setCurrent(widget);
         } else {
-            ctx.addWidget(new WidgetLoader());
+            ctx.addWidget(new WidgetLoader(ctx));
         }
     }
 

@@ -1,7 +1,12 @@
 package com.sudoclient.widgets;
 
+import com.sudoclient.client.Client;
+import com.sudoclient.client.overlayevents.OverlayDispatcher;
+import com.sudoclient.client.overlayevents.OverlayListener;
+import com.sudoclient.client.overlayevents.OverlayManager;
 import com.sudoclient.widgets.api.Widget;
 import com.sudoclient.widgets.preloaded.runescape.Runescape;
+import com.sudoclient.widgets.preloaded.widgetloader.WidgetLoader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,16 +18,21 @@ import java.util.ArrayList;
  * Time: 5:56 AM
  */
 public class Widgets extends JPanel {
-    private final JFrame ctx;
+    private final Client ctx;
     private final Tab ADD_TAB;
+    private final OverlayManager overlayManager;
     private JPanel tabPanel;
     private ArrayList<Widget> widgets;
     private Widget current;
     private Runescape runescape;
 
-    public Widgets(JFrame ctx) {
+    public Widgets(Client ctx) {
         super(new BorderLayout());
         this.ctx = ctx;
+
+        Widget.setContext(this);
+        overlayManager = new OverlayManager(this);
+        WidgetLoader.loadLocalWidgets();
 
         Tab.setContext(this);
         ADD_TAB = new Tab();
@@ -38,19 +48,39 @@ public class Widgets extends JPanel {
         packTabPanel();
     }
 
+    public void close() {
+        overlayManager.kill();
+        runescape.kill();
+    }
+
     private Widget initRSWidget() {
         runescape = new Runescape();
+        overlayManager.addDispatcher(runescape);
         add(runescape, BorderLayout.CENTER);
         widgets.add(runescape);
         return runescape;
     }
 
     public void addWidget(Widget widget) {
+        if (widget instanceof OverlayDispatcher) {
+            overlayManager.addDispatcher((OverlayDispatcher) widget);
+        }
+        if (widget instanceof OverlayListener) {
+            overlayManager.addListener((OverlayListener) widget);
+        }
+
         widgets.add(widget);
         setCurrent(widget);
     }
 
     public void removeWidget(Widget widget) {
+        if (widget instanceof OverlayDispatcher) {
+            overlayManager.removeDispatcher((OverlayDispatcher) widget);
+        }
+        if (widget instanceof OverlayListener) {
+            overlayManager.removeListener((OverlayListener) widget);
+        }
+
         widgets.remove(widget);
         packTabPanel();
     }
@@ -72,6 +102,10 @@ public class Widgets extends JPanel {
             current = widget;
             packTabPanel();
         }
+    }
+
+    public Widget getCurrent() {
+        return current;
     }
 
     public void packTabPanel() {

@@ -1,5 +1,6 @@
 package com.sudoclient.widgets.preloaded.runescape;
 
+import com.sudoclient.client.overlayevents.OverlayDispatcher;
 import com.sudoclient.widgets.api.Widget;
 import com.sudoclient.widgets.api.WidgetPreamble;
 
@@ -17,7 +18,8 @@ import java.net.URL;
  */
 
 @WidgetPreamble(name = "Runescape", authors = {"Jagex"})
-public final class Runescape extends Widget implements Runnable, AppletStub {
+public final class Runescape extends Widget implements Runnable, AppletStub, OverlayDispatcher {
+    private final Object lock = new Object();
     private Applet client = new Applet();
     private RSClassLoader loader;
     private JLabel splash;
@@ -33,19 +35,35 @@ public final class Runescape extends Widget implements Runnable, AppletStub {
      * The run void of the loader
      */
     public void run() {
-        try {
-            loader = new RSClassLoader();
-            Class<?> c = loader.loadClass("Rs2Applet");
-            client = (Applet) c.newInstance();
-            client.setStub(this);
-            add(client, BorderLayout.CENTER);
-            client.init();
-            client.start();
-            remove(splash);
-            updateUI();
-        } catch (Exception e) {
-            e.printStackTrace();
+        synchronized (lock) {
+            if (client != null) {
+                try {
+                    loader = new RSClassLoader();
+                    Class<?> c = loader.loadClass("Rs2Applet");
+                    client = (Applet) c.newInstance();
+                    client.setStub(this);
+                    add(client, BorderLayout.CENTER);
+                    client.init();
+                    client.start();
+                    remove(splash);
+                    updateUI();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
+    }
+
+    public void kill() {
+        synchronized (lock) {
+            client.destroy();
+            client = null;
+        }
+    }
+
+    @Override
+    public Graphics getOverlayGraphics() {
+        return getRootPane().getGlassPane().getGraphics().create(getCtxX(), getCtxY(), getWidth(), getHeight());
     }
 
     /**
@@ -97,4 +115,6 @@ public final class Runescape extends Widget implements Runnable, AppletStub {
     @Override
     public void appletResize(int width, int height) {
     }
+
+
 }
