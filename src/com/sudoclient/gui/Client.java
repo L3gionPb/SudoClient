@@ -4,8 +4,6 @@ import com.sudoclient.widgets.Widgets;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 
 /**
  * User: deprecated
@@ -13,7 +11,7 @@ import java.awt.event.ComponentListener;
  * Time: 5:56 PM
  */
 
-public class Client extends JFrame implements ComponentListener {
+public class Client extends JFrame {
     private Widgets widgets;
 
     public Client() {
@@ -21,32 +19,14 @@ public class Client extends JFrame implements ComponentListener {
         setLayout(new BorderLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         initComponents();
-        setSize(768, 600);
-        addComponentListener(this);
+        setSize(800, 650);
         setVisible(true);
     }
 
     public void initComponents() {
-        widgets = new Widgets();
+        widgets = new Widgets(this);
         add(widgets.getTabPanel(), BorderLayout.NORTH);
         add(widgets, BorderLayout.CENTER);
         pack();
-    }
-
-    @Override
-    public void componentResized(ComponentEvent componentEvent) {
-        widgets.updateUI();
-    }
-
-    @Override
-    public void componentMoved(ComponentEvent componentEvent) {
-    }
-
-    @Override
-    public void componentShown(ComponentEvent componentEvent) {
-    }
-
-    @Override
-    public void componentHidden(ComponentEvent componentEvent) {
     }
 }

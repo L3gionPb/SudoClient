@@ -1,9 +1,7 @@
 package com.sudoclient.widgets;
 
-import com.sudoclient.widgets.api.Manifest;
 import com.sudoclient.widgets.api.Widget;
 import com.sudoclient.widgets.preloaded.WidgetLoader;
-import com.sudoclient.widgets.preloaded.runescape.Runescape;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,32 +14,56 @@ import java.awt.event.MouseListener;
  * Time: 5:57 AM
  */
 public class Tab extends JToggleButton implements MouseListener {
+    private static Widgets ctx = null;
     private Widget widget;
-    private Widgets ctx;
 
-    public Tab(Widgets ctx) {
-        this.ctx = ctx;
-        add(new JLabel(new ImageIcon(this.getClass().getResource("/resources/newTab.png"))));
-        setMaximumSize(new Dimension(20, 20));
-        widget = null;
-        enableInputMethods(true);
-        addMouseListener(this);
+    /**
+     * Create a new tab button
+     */
+    public Tab() {
+        this(null);
     }
 
-    public Tab(Widgets ctx, Widget widget) {
-        this.ctx = ctx;
+    /**
+     * Create a tab for a defined widget
+     *
+     * @param widget the widget
+     */
+    public Tab(Widget widget) {
         this.widget = widget;
-        setMinimumSize(new Dimension(Integer.MAX_VALUE, 20));
-        add(new JLabel(widget.getClass().getAnnotation(Manifest.class).name()));
-        setToolTipText(getAuthorsText() + "\n" + getDescText());
+
+        if (widget == null || widget.getPreamble() == null) {
+            setMaximumSize(new Dimension(20, 20));
+            add(new JLabel(new ImageIcon(this.getClass().getResource("/resources/newTab.png"))));
+        } else {
+            setMinimumSize(new Dimension(Integer.MAX_VALUE, 20));
+            add(new JLabel(widget.getPreamble().name()));
+            setToolTipText(getAuthorsText() + "\n" + getDescText());
+        }
+
         enableInputMethods(true);
         addMouseListener(this);
+        setEnabled(false);
+    }
+
+    /**
+     * Set the context of the Tabs (Internal use only)
+     *
+     * @param ctx the context
+     * @throws RuntimeException if context has been set
+     */
+    public static void setContext(Widgets ctx) throws RuntimeException {
+        if (Tab.ctx == null) {
+            Tab.ctx = ctx;
+        } else {
+            throw new RuntimeException("Context has already been set, cannot be changed");
+        }
     }
 
     private String getAuthorsText() {
         String s = "Created by ";
 
-        for (String s2 : widget.getClass().getAnnotation(Manifest.class).authors()) {
+        for (String s2 : widget.getPreamble().authors()) {
             s += s2 + "   ";
         }
 
@@ -49,23 +71,13 @@ public class Tab extends JToggleButton implements MouseListener {
     }
 
     private String getDescText() {
-        return widget.getClass().getAnnotation(Manifest.class).description();
-    }
-
-    public Widgets getCtx() {
-        return ctx;
+        return widget.getPreamble().description();
     }
 
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
         if (widget != null) {
             ctx.setCurrent(widget);
-
-            if (widget instanceof Runescape) {
-                ((Runescape) widget).getClient().requestFocusInWindow();
-            } else {
-                widget.requestFocusInWindow();
-            }
         } else {
             ctx.addWidget(new WidgetLoader());
         }

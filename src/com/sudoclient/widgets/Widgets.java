@@ -13,13 +13,20 @@ import java.util.ArrayList;
  * Time: 5:56 AM
  */
 public class Widgets extends JPanel {
+    private final JFrame ctx;
+    private final Tab ADD_TAB;
     private JPanel tabPanel;
     private ArrayList<Widget> widgets;
     private Widget current;
     private Runescape runescape;
 
-    public Widgets() {
+    public Widgets(JFrame ctx) {
         super(new BorderLayout());
+        this.ctx = ctx;
+
+        Tab.setContext(this);
+        ADD_TAB = new Tab();
+        ADD_TAB.setEnabled(false);
 
         FlowLayout flowLayout = new FlowLayout();
         flowLayout.setAlignment(FlowLayout.LEFT);
@@ -33,14 +40,12 @@ public class Widgets extends JPanel {
 
     private Widget initRSWidget() {
         runescape = new Runescape();
-        runescape.setTab(new Tab(this, runescape));
         add(runescape, BorderLayout.CENTER);
         widgets.add(runescape);
         return runescape;
     }
 
     public void addWidget(Widget widget) {
-        widget.setTab(new Tab(this, widget));
         widgets.add(widget);
         setCurrent(widget);
     }
@@ -50,59 +55,37 @@ public class Widgets extends JPanel {
         packTabPanel();
     }
 
-    public void setCurrent(Widget widget) {
-        if (current != widget) {
-            if (current instanceof Runescape) {
-                current.setVisible(false);
-            } else {
+    public void setCurrent(final Widget widget) {
+        if (!widget.equals(current)) {
+            current.loseFocus();
+            if (!(current.equals(runescape))) {
                 remove(current);
             }
 
-            current = widget;
-
-            if (current instanceof Runescape) {
-                current.setVisible(true);
-
-            } else {
-                add(current, BorderLayout.CENTER);
+            if (!(widget.equals(runescape))) {
+                add(widget, BorderLayout.CENTER);
             }
+            widget.gainFocus();
 
-            current.setSize(getSize());
+            current = widget;
             packTabPanel();
+            revalidate();
+            ctx.repaint();
         }
-    }
-
-    public Widget getCurrent() {
-        return current;
     }
 
     public void packTabPanel() {
         tabPanel.removeAll();
         for (Widget widget : widgets) {
             Tab tab = widget.getTab();
-            if (widget.equals(current)) {
-                tab.setSelected(true);
-                tab.setEnabled(false);
-            } else {
-                tab.setSelected(false);
-            }
-
+            tab.setSelected(widget.equals(current));
             tabPanel.add(tab);
         }
-        tabPanel.add(new Tab(this));
-        updateUI();
+        tabPanel.add(ADD_TAB);
+        tabPanel.updateUI();
     }
 
     public JPanel getTabPanel() {
         return tabPanel;
-    }
-
-    @Override
-    public void setSize(int i, int i1) {
-        super.setSize(i, i1);
-        if (runescape != null) {
-            runescape.setSize(i, i1);
-            current.setSize(i, i1);
-        }
     }
 }

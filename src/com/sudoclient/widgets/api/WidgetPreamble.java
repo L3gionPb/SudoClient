@@ -1,7 +1,6 @@
 package com.sudoclient.widgets.api;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.*;
 
 /**
  * User: deprecated
@@ -9,8 +8,10 @@ import java.lang.annotation.RetentionPolicy;
  * Time: 5:34 AM
  */
 
+@Documented
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Manifest {
+@Target(ElementType.TYPE)
+public @interface WidgetPreamble {
     String name();
 
     String description() default "";

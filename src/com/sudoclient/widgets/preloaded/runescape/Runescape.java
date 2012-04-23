@@ -1,7 +1,7 @@
 package com.sudoclient.widgets.preloaded.runescape;
 
-import com.sudoclient.widgets.api.Manifest;
 import com.sudoclient.widgets.api.Widget;
+import com.sudoclient.widgets.api.WidgetPreamble;
 
 import javax.swing.*;
 import java.applet.Applet;
@@ -16,9 +16,9 @@ import java.net.URL;
  * Time: 9:17 AM
  */
 
-@Manifest(name = "Runescape", authors = {"Jagex"})
-public class Runescape extends Widget implements Runnable, AppletStub {
-    private Applet client;
+@WidgetPreamble(name = "Runescape", authors = {"Jagex"})
+public final class Runescape extends Widget implements Runnable, AppletStub {
+    private Applet client = new Applet();
     private RSClassLoader loader;
     private JLabel splash;
 
@@ -48,13 +48,30 @@ public class Runescape extends Widget implements Runnable, AppletStub {
         }
     }
 
+    /**
+     * Called when the Widget loses focus
+     */
+    @Override
+    public void loseFocus() {
+        setVisible(false);
+    }
+
+    /**
+     * Called when the Widget gains focus
+     */
+    @Override
+    public void gainFocus() {
+        setVisible(true);
+        requestFocus();
+    }
+
     public Applet getClient() {
         return client;
     }
 
     @Override
     public boolean isActive() {
-        return getContext().getCurrent().equals(this);
+        return true;
     }
 
     @Override

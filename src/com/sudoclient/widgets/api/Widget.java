@@ -1,7 +1,6 @@
 package com.sudoclient.widgets.api;
 
 import com.sudoclient.widgets.Tab;
-import com.sudoclient.widgets.Widgets;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,30 +14,82 @@ import java.awt.*;
 public class Widget extends JPanel {
     private Tab tab;
     private int idNum;
+    private WidgetPreamble preamble;
 
+    /**
+     * Create a new Widget with a standard BorderLayout
+     */
     public Widget() {
-        super(new BorderLayout());
+        this(new BorderLayout());
+    }
+
+    /**
+     * Create a new Widget with a given LayoutManager
+     *
+     * @param layoutManager the layout manager
+     */
+    public Widget(LayoutManager layoutManager) {
+        super(layoutManager);
+        preamble = this.getClass().getAnnotation(WidgetPreamble.class);
         idNum = IdGenerator.getNext();
+        tab = new Tab(this);
     }
 
-    public final void setTab(Tab tab) {
-        this.tab = tab;
+    /**
+     * Called when the Widget loses focus
+     */
+    public void loseFocus() {
     }
 
+    /**
+     * Called when the Widget gains focus
+     */
+    public void gainFocus() {
+    }
+
+    /**
+     * Gets the tab for this widget (Internal use only)
+     *
+     * @return the Tab
+     */
     public final Tab getTab() {
         return tab;
     }
 
-    public final Widgets getContext() {
-        return tab.getCtx();
+    /**
+     * Gets the preamble for this widget (Internal use only)
+     *
+     * @return the preamble
+     */
+    public final WidgetPreamble getPreamble() {
+        return preamble;
     }
 
+    /**
+     * Compares two objects for equality
+     *
+     * @param o the object to compare to
+     * @return true if o is a Widget and {@link Widget#equals(Widget)} is true
+     */
     @Override
-    public boolean equals(Object o) {
-        return (o instanceof Widget) && ((Widget) o).idNum == idNum;
+    public final boolean equals(Object o) {
+        return (o instanceof Widget) && equals((Widget) o);
     }
 
-    private static class IdGenerator {
+    /**
+     * Equality based on assigned ID number on creation
+     *
+     * @param w widget to compare to
+     * @return true if the widgets are equal, else false
+     */
+    public final boolean equals(Widget w) {
+        return (w == null ? -1 : w.idNum) == idNum;
+    }
+
+    /**
+     * Generates ID number for tab (Internal use only)
+     */
+    private final static class IdGenerator {
         private static int prev = 0;
 
         private static int getNext() {

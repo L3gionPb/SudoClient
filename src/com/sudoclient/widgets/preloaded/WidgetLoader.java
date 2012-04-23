@@ -1,7 +1,10 @@
 package com.sudoclient.widgets.preloaded;
 
-import com.sudoclient.widgets.api.Manifest;
 import com.sudoclient.widgets.api.Widget;
+import com.sudoclient.widgets.api.WidgetPreamble;
+
+import javax.swing.*;
+import java.util.HashMap;
 
 /**
  * User: deprecated
@@ -9,7 +12,17 @@ import com.sudoclient.widgets.api.Widget;
  * Time: 6:08 AM
  */
 
-@Manifest(name = "Widgets", authors = {"Deprecated"})
+@WidgetPreamble(name = "Widgets", authors = {"Deprecated"})
 public class WidgetLoader extends Widget {
+    private HashMap<WidgetPreamble, Widget> widgetHashMap;
+    private JPanel viewField;
+    private JTextField search;
 
+    public WidgetLoader() {
+
+    }
+
+    private void fillViewField(String text, int page) {
+
+    }
 }

@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  * Date: 4/22/12
  * Time: 9:24 AM
  */
-public class RSClassLoader {
+public final class RSClassLoader {
     private URLClassLoader loader;
     private final HashMap<String, String> parameters = new HashMap<String, String>();
     private static final Pattern PARAMETER_PATTER = Pattern.compile("<param name=\"(.+)\" value=\"(.+)\">");
@@ -31,6 +31,7 @@ public class RSClassLoader {
         loader = new URLClassLoader(new URL[]{new URL(baseURL, gamepack)});
     }
 
+    //TODO load random/given world
     private void setBaseURL() throws MalformedURLException {
         baseURL = new URL("http://world24.runescape.com/");
     }
