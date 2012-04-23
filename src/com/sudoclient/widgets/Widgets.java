@@ -64,13 +64,13 @@ public class Widgets extends JPanel {
 
             if (!(widget.equals(runescape))) {
                 add(widget, BorderLayout.CENTER);
+            } else {
+                ((BorderLayout) getLayout()).addLayoutComponent(runescape, BorderLayout.CENTER);
             }
             widget.gainFocus();
 
             current = widget;
             packTabPanel();
-            revalidate();
-            ctx.repaint();
         }
     }
 

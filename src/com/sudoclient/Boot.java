@@ -1,7 +1,5 @@
 package com.sudoclient;
 
-import com.sudoclient.gui.Client;
-
 /**
  * User: deprecated
  * Date: 4/21/12

@@ -1,7 +1,7 @@
 package com.sudoclient.widgets;
 
 import com.sudoclient.widgets.api.Widget;
-import com.sudoclient.widgets.preloaded.WidgetLoader;
+import com.sudoclient.widgets.preloaded.widgetloader.WidgetLoader;
 
 import javax.swing.*;
 import java.awt.*;

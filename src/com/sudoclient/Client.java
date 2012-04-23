@@ -1,4 +1,4 @@
-package com.sudoclient.gui;
+package com.sudoclient;
 
 import com.sudoclient.widgets.Widgets;
 
