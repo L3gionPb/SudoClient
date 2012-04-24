@@ -1,9 +1,10 @@
 package com.sudoclient.widgets;
 
 import com.sudoclient.client.Client;
-import com.sudoclient.client.overlayevents.OverlayDispatcher;
+import com.sudoclient.client.ClientMenu;
 import com.sudoclient.client.overlayevents.OverlayListener;
 import com.sudoclient.client.overlayevents.OverlayManager;
+import com.sudoclient.client.overlayevents.OverlayTarget;
 import com.sudoclient.widgets.api.Widget;
 import com.sudoclient.widgets.preloaded.runescape.Runescape;
 import com.sudoclient.widgets.preloaded.widgetloader.WidgetLoader;
@@ -22,6 +23,8 @@ public class Widgets extends JPanel {
     private final Tab ADD_TAB;
     private final OverlayManager overlayManager;
     private JPanel tabPanel;
+    private ClientMenu menu;
+    private JPanel menuBar;
     private ArrayList<Widget> widgets;
     private Widget current;
     private Runescape runescape;
@@ -30,18 +33,21 @@ public class Widgets extends JPanel {
         super(new BorderLayout());
         this.ctx = ctx;
 
-        Widget.setContext(this);
+        menu = new ClientMenu(ctx);
         overlayManager = new OverlayManager(this);
+
+        Widget.setContext(this);
         WidgetLoader.loadLocalWidgets();
 
         Tab.setContext(this);
         ADD_TAB = new Tab();
         ADD_TAB.setEnabled(false);
 
+        menuBar = new JPanel(new BorderLayout());
         FlowLayout flowLayout = new FlowLayout();
         flowLayout.setAlignment(FlowLayout.LEFT);
         tabPanel = new JPanel(flowLayout);
-        tabPanel.setMinimumSize(new Dimension(Integer.MAX_VALUE, 22));
+        tabPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 22));
 
         widgets = new ArrayList<Widget>();
         current = initRSWidget();
@@ -54,19 +60,19 @@ public class Widgets extends JPanel {
     }
 
     private Widget initRSWidget() {
-        runescape = new Runescape();
-        overlayManager.addDispatcher(runescape);
+        runescape = new Runescape(ctx.getOverlay());
         add(runescape, BorderLayout.CENTER);
         widgets.add(runescape);
+        overlayManager.addTarget(runescape);
         return runescape;
     }
 
     public void addWidget(Widget widget) {
-        if (widget instanceof OverlayDispatcher) {
-            overlayManager.addDispatcher((OverlayDispatcher) widget);
-        }
         if (widget instanceof OverlayListener) {
             overlayManager.addListener((OverlayListener) widget);
+        }
+        if (widget instanceof OverlayTarget) {
+            overlayManager.addTarget((OverlayTarget) widget);
         }
 
         widgets.add(widget);
@@ -74,11 +80,11 @@ public class Widgets extends JPanel {
     }
 
     public void removeWidget(Widget widget) {
-        if (widget instanceof OverlayDispatcher) {
-            overlayManager.removeDispatcher((OverlayDispatcher) widget);
-        }
         if (widget instanceof OverlayListener) {
             overlayManager.removeListener((OverlayListener) widget);
+        }
+        if (widget instanceof OverlayTarget) {
+            overlayManager.removeTarget((OverlayTarget) widget);
         }
 
         widgets.remove(widget);
@@ -119,7 +125,12 @@ public class Widgets extends JPanel {
         tabPanel.updateUI();
     }
 
-    public JPanel getTabPanel() {
-        return tabPanel;
+    public JPanel getMenuBar() {
+        menuBar.removeAll();
+        menuBar.add(tabPanel, BorderLayout.WEST);
+        menuBar.add(menu, BorderLayout.EAST);
+        menuBar.updateUI();
+
+        return menuBar;
     }
 }

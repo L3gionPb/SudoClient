@@ -21,8 +21,8 @@ public class Clock extends Widget implements OverlayListener {
     }
 
     @Override
-    public void paintOverlay(Graphics g) {
+    public void renewOverlay(Graphics g) {
         g.setColor(Color.WHITE);
-        g.drawString("Time: " + (System.currentTimeMillis() - startTime), 20, 20);
+        g.drawString("Time: " + (System.currentTimeMillis() - startTime) + "ms", 20, 100);
     }
 }

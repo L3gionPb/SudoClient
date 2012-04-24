@@ -16,8 +16,8 @@ public class OverlayManager implements Runnable {
     private final Widgets ctx;
     private final Object lock = new Object();
     private boolean running;
+    private ArrayList<OverlayTarget> targets;
     private ArrayList<OverlayListener> listeners;
-    private ArrayList<OverlayDispatcher> dispatchers;
 
     public OverlayManager(Widgets ctx) {
         if (instance != null) {
@@ -25,8 +25,8 @@ public class OverlayManager implements Runnable {
         }
 
         this.ctx = ctx;
+        targets = new ArrayList<OverlayTarget>();
         listeners = new ArrayList<OverlayListener>();
-        dispatchers = new ArrayList<OverlayDispatcher>();
         running = true;
 
         new Thread(this).start();
@@ -38,23 +38,24 @@ public class OverlayManager implements Runnable {
         }
     }
 
-    public void addDispatcher(OverlayDispatcher dispatcher) {
-        synchronized (lock) {
-            dispatchers.add(dispatcher);
-        }
-    }
-
     public void removeListener(OverlayListener listener) {
         synchronized (lock) {
             listeners.remove(listener);
         }
     }
 
-    public void removeDispatcher(OverlayDispatcher dispatcher) {
+    public void addTarget(OverlayTarget target) {
         synchronized (lock) {
-            dispatchers.remove(dispatcher);
+            targets.add(target);
         }
     }
+
+    public void removeTarget(OverlayTarget target) {
+        synchronized (lock) {
+            targets.remove(target);
+        }
+    }
+
 
     public void kill() {
         running = false;
@@ -62,25 +63,23 @@ public class OverlayManager implements Runnable {
 
     @Override
     public void run() {
+        Graphics g;
         while (running) {
             synchronized (lock) {
-                if (ctx.getCurrent() instanceof OverlayDispatcher) {
-                    for (OverlayDispatcher dispatcher : dispatchers) {
-                        Graphics g = dispatcher.getOverlayGraphics();
+                if (ctx.getCurrent() instanceof OverlayTarget && targets.contains(ctx.getCurrent())) {
+                    g = ((OverlayTarget) ctx.getCurrent()).getOverlayGraphics();
 
-                        if (g != null) {
-                            for (OverlayListener listener : listeners) {
-                                listener.paintOverlay(g);
-                            }
-
-                            g.dispose();
+                    if (!(g == null)) {
+                        for (OverlayListener listener : listeners) {
+                            listener.renewOverlay(g);
                         }
+                        g.dispose();
                     }
                 }
             }
 
             try {
-                Thread.sleep(70);
+                Thread.sleep(100);
             } catch (InterruptedException ignored) {
             }
         }

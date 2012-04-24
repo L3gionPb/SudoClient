@@ -8,5 +8,5 @@ import java.awt.*;
  * Time: 10:17 AM
  */
 public interface OverlayListener {
-    public void paintOverlay(Graphics g);
+    public void renewOverlay(Graphics g);
 }

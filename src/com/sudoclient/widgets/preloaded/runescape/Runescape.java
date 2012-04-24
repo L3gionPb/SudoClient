@@ -1,6 +1,6 @@
 package com.sudoclient.widgets.preloaded.runescape;
 
-import com.sudoclient.client.overlayevents.OverlayDispatcher;
+import com.sudoclient.client.overlayevents.OverlayTarget;
 import com.sudoclient.widgets.api.Widget;
 import com.sudoclient.widgets.api.WidgetPreamble;
 
@@ -18,16 +18,22 @@ import java.net.URL;
  */
 
 @WidgetPreamble(name = "Runescape", authors = {"Jagex"})
-public final class Runescape extends Widget implements Runnable, AppletStub, OverlayDispatcher {
+public final class Runescape extends Widget implements Runnable, AppletStub, OverlayTarget {
     private final Object lock = new Object();
     private Applet client = new Applet();
     private RSClassLoader loader;
     private JLabel splash;
+    private boolean alive;
+    private Overlay overlay = null;
 
-    public Runescape() {
+    public Runescape(Overlay overlay) {
+        this.overlay = overlay;
+
         setBackground(Color.BLACK);
         splash = new JLabel(new ImageIcon(this.getClass().getResource("/resources/splash.gif")));
         add(splash, BorderLayout.CENTER);
+
+        alive = true;
         new Thread(this).start();
     }
 
@@ -38,13 +44,25 @@ public final class Runescape extends Widget implements Runnable, AppletStub, Ove
         synchronized (lock) {
             if (client != null) {
                 try {
-                    loader = new RSClassLoader();
-                    Class<?> c = loader.loadClass("Rs2Applet");
-                    client = (Applet) c.newInstance();
-                    client.setStub(this);
-                    add(client, BorderLayout.CENTER);
-                    client.init();
-                    client.start();
+                    if (alive) {
+                        loader = new RSClassLoader();
+                    }
+
+                    if (alive) {
+                        Class<?> c = loader.loadClass("Rs2Applet");
+                        client = (Applet) c.newInstance();
+                        client.setStub(this);
+                        add(client, BorderLayout.CENTER);
+                    }
+
+                    if (alive) {
+                        client.init();
+                    }
+
+                    if (alive) {
+                        client.start();
+                    }
+
                     remove(splash);
                     updateUI();
                 } catch (Exception e) {
@@ -55,15 +73,17 @@ public final class Runescape extends Widget implements Runnable, AppletStub, Ove
     }
 
     public void kill() {
-        synchronized (lock) {
+        alive = false;
+        synchronized (client.getTreeLock()) {
             client.destroy();
-            client = null;
         }
+        client = null;
     }
 
     @Override
     public Graphics getOverlayGraphics() {
-        return getRootPane().getGlassPane().getGraphics().create(getCtxX(), getCtxY(), getWidth(), getHeight());
+        overlay.repaint();
+        return overlay.getBufferGraphics();
     }
 
     /**
@@ -79,6 +99,7 @@ public final class Runescape extends Widget implements Runnable, AppletStub, Ove
      */
     @Override
     public void gainFocus() {
+        client.validate();
         setVisible(true);
         requestFocus();
     }
@@ -115,6 +136,4 @@ public final class Runescape extends Widget implements Runnable, AppletStub, Ove
     @Override
     public void appletResize(int width, int height) {
     }
-
-
 }

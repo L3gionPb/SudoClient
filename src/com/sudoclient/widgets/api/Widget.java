@@ -88,6 +88,10 @@ public class Widget extends JPanel {
         return ctx.getY();
     }
 
+    public final int getId() {
+        return idNum;
+    }
+
     /**
      * Compares two objects for equality
      *

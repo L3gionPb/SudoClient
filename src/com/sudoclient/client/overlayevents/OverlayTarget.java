@@ -7,6 +7,6 @@ import java.awt.*;
  * Date: 4/23/12
  * Time: 10:23 AM
  */
-public interface OverlayDispatcher {
+public interface OverlayTarget {
     public Graphics getOverlayGraphics();
 }
