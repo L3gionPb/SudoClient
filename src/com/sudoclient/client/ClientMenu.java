@@ -1,6 +1,6 @@
 package com.sudoclient.client;
 
-import com.sudoclient.widgets.preloaded.runewiki.RuneWiki;
+import com.sudoclient.widgets.preloaded.runewikia.RuneWiki;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,6 +31,7 @@ public class ClientMenu extends JPanel implements MouseListener, KeyListener {
 
         expandIcon = new ImageIcon(this.getClass().getResource("/resources/expand.png"));
         fullScreenButton = new JToggleButton(expandIcon);
+        fullScreenButton.enableInputMethods(true);
         fullScreenButton.setEnabled(false);
         fullScreenButton.addMouseListener(this);
 
@@ -70,8 +71,18 @@ public class ClientMenu extends JPanel implements MouseListener, KeyListener {
     @Override
     public void keyPressed(KeyEvent keyEvent) {
         if (search.hasFocus() && (keyEvent.isActionKey() || keyEvent.getKeyCode() == KeyEvent.VK_ENTER)) {
-            ctx.getWidgets().addWidget(new RuneWiki(search.getText()));
-            search.setText("");
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    if (ctx.getWidgets().getCurrent() instanceof RuneWiki) {
+                        ((RuneWiki) ctx.getWidgets().getCurrent()).searchWiki(search.getText());
+                        search.setText("");
+                    } else {
+                        ctx.getWidgets().addWidget(new RuneWiki(search.getText()));
+                        search.setText("");
+                    }
+                }
+            });
         }
     }
 

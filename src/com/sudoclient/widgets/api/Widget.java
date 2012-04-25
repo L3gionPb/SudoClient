@@ -2,6 +2,7 @@ package com.sudoclient.widgets.api;
 
 import com.sudoclient.widgets.Tab;
 import com.sudoclient.widgets.Widgets;
+import com.sudoclient.widgets.preloaded.runescape.Runescape;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +33,10 @@ public class Widget extends JPanel {
      */
     public Widget(LayoutManager layoutManager) {
         super(layoutManager);
+        if (!(this instanceof Runescape)) {
+            setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        }
+
         preamble = this.getClass().getAnnotation(WidgetPreamble.class);
         idNum = IdGenerator.getNext();
         tab = new Tab(this);
@@ -47,6 +52,7 @@ public class Widget extends JPanel {
      * Called when the Widget gains focus
      */
     public void gainFocus() {
+        requestFocus();
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.sudoclient.widgets;
 
 import com.sudoclient.widgets.api.Widget;
+import com.sudoclient.widgets.preloaded.runescape.Runescape;
 import com.sudoclient.widgets.preloaded.widgetloader.WidgetLoader;
 
 import javax.swing.*;
@@ -77,7 +78,11 @@ public class Tab extends JToggleButton implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
         if (widget != null) {
-            ctx.setCurrent(widget);
+            if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
+                ctx.setCurrent(widget);
+            } else if (mouseEvent.getButton() == MouseEvent.BUTTON3 && !(widget instanceof Runescape)) {
+                ctx.removeWidget(widget);
+            }
         } else {
             ctx.addWidget(new WidgetLoader(ctx));
         }

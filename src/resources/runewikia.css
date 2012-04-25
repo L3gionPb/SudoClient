@@ -1,0 +1,64 @@
+a {
+    color: #89632d;
+}
+
+body {
+    padding: 10px 10px;
+    background-color: #fff8dc;
+    color: #000000; /*Ramzee contribution*/
+    text-align: left;
+    font-size: 10px;
+}
+
+table a {
+    color: #0000ff;
+}
+
+table.infobox {
+    position: absolute;
+    float: right;
+    right: 10px;
+    width: 300px;
+}
+
+table.wikitable th {
+    background-color: #f2f2f2;
+}
+
+table.wikitable td {
+    background-color: #f9f9f9;
+}
+
+th.navbox-title {
+    text-align: center;
+    background-color: #e1c7aa;
+}
+
+td.navbox-group {
+    text-align: left;
+    background-color: #ebd9c7;
+}
+
+table.questdetails {
+    background-color: #f8f1ea;
+}
+
+td.questdetails-header {
+    text-align: left;
+    background-color: #e1c7aa;
+}
+
+td.questdetails-header-alternate {
+    text-align: left;
+    background-color: #ebd9c7;
+}
+
+td.questdetails-info {
+    text-align: left;
+    background-color: #f8f1ea;
+}
+
+img {
+    padding: 2px 2px;
+    vertical-align: text-top;
+}

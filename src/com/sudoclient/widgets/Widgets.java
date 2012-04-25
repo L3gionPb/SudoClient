@@ -87,8 +87,16 @@ public class Widgets extends JPanel {
             overlayManager.removeTarget((OverlayTarget) widget);
         }
 
+        int index = widgets.indexOf(widget);
+        if (widgets.size() > index + 1) {
+            setCurrent(widgets.get(index + 1));
+        } else {
+            setCurrent(widgets.get(index - 1));
+        }
+
         widgets.remove(widget);
         packTabPanel();
+        updateUI();
     }
 
     public void setCurrent(final Widget widget) {

@@ -65,8 +65,10 @@ public class Client extends JFrame implements WindowListener {
                         dispose();
                         setUndecorated(false);
                         device.setFullScreenWindow(null);
-                        setSize(800, 600);
+                        pack();
+                        //setSize(800, 600);
                         setLocationRelativeTo(null);
+                        setVisible(true);
                     } else {
                         dispModeOld = device.getDisplayMode();
                         setVisible(false);
@@ -75,9 +77,9 @@ public class Client extends JFrame implements WindowListener {
                         device.setFullScreenWindow(Client.this);
                     }
 
-                    setVisible(true);
+                    //pack();
                     widgets.getCurrent().gainFocus();
-                    //repaint();
+                    repaint();
                 }
             }
         });
