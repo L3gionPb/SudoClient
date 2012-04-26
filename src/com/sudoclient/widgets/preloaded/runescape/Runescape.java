@@ -1,6 +1,5 @@
 package com.sudoclient.widgets.preloaded.runescape;
 
-import com.sudoclient.client.overlayevents.OverlayTarget;
 import com.sudoclient.widgets.api.Widget;
 import com.sudoclient.widgets.api.WidgetPreamble;
 
@@ -18,17 +17,14 @@ import java.net.URL;
  */
 
 @WidgetPreamble(name = "Runescape", authors = {"Jagex"})
-public final class Runescape extends Widget implements Runnable, AppletStub, OverlayTarget {
+public final class Runescape extends Widget implements Runnable, AppletStub {
     private final Object lock = new Object();
     private Applet client = new Applet();
     private RSClassLoader loader;
     private JLabel splash;
     private boolean alive;
-    private Overlay overlay = null;
 
-    public Runescape(Overlay overlay) {
-        this.overlay = overlay;
-
+    public Runescape() {
         setBackground(Color.BLACK);
         splash = new JLabel(new ImageIcon(this.getClass().getResource("/resources/splash.gif")));
         add(splash, BorderLayout.CENTER);
@@ -78,12 +74,6 @@ public final class Runescape extends Widget implements Runnable, AppletStub, Ove
             client.destroy();
         }
         client = null;
-    }
-
-    @Override
-    public Graphics getOverlayGraphics() {
-        overlay.repaint();
-        return overlay.getBufferGraphics();
     }
 
     /**

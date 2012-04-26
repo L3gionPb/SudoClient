@@ -1,7 +1,7 @@
 package com.sudoclient.widgets.api;
 
 import com.sudoclient.widgets.Tab;
-import com.sudoclient.widgets.Widgets;
+import com.sudoclient.widgets.WidgetManager;
 import com.sudoclient.widgets.preloaded.runescape.Runescape;
 
 import javax.swing.*;
@@ -14,7 +14,7 @@ import java.awt.*;
  */
 
 public class Widget extends JPanel {
-    private static Widgets ctx = null;
+    private static WidgetManager ctx = null;
     private Tab tab;
     private int idNum;
     private WidgetPreamble preamble;
@@ -78,7 +78,7 @@ public class Widget extends JPanel {
      *
      * @param ctx the context
      */
-    public static void setContext(Widgets ctx) {
+    public static void setContext(WidgetManager ctx) {
         if (Widget.ctx != null) {
             throw new RuntimeException("Widget context cannot be reset");
         }

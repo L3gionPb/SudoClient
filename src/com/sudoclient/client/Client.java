@@ -1,7 +1,6 @@
 package com.sudoclient.client;
 
-import com.sudoclient.widgets.Widgets;
-import com.sudoclient.widgets.preloaded.runescape.Overlay;
+import com.sudoclient.widgets.WidgetManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,8 +14,7 @@ import java.awt.event.WindowListener;
  */
 
 public class Client extends JFrame implements WindowListener {
-    private Widgets widgets;
-    private Overlay overlay;
+    private WidgetManager widgetManager;
     private boolean fullscreen;
     private GraphicsDevice device;
     private DisplayMode dispModeOld = null;
@@ -35,20 +33,14 @@ public class Client extends JFrame implements WindowListener {
         setLocationRelativeTo(null);
     }
 
-    public Widgets getWidgets() {
-        return widgets;
-    }
-
-    public Overlay getOverlay() {
-        return overlay;
+    public WidgetManager getWidgetManager() {
+        return widgetManager;
     }
 
     public void initComponents() {
-        overlay = new Overlay();
-        setGlassPane(overlay);
-        widgets = new Widgets(this);
-        add(widgets.getMenuBar(), BorderLayout.NORTH);
-        add(widgets, BorderLayout.CENTER);
+        widgetManager = new WidgetManager(this);
+        add(widgetManager.getMenuBar(), BorderLayout.NORTH);
+        add(widgetManager, BorderLayout.CENTER);
         pack();
     }
 
@@ -78,7 +70,7 @@ public class Client extends JFrame implements WindowListener {
                     }
 
                     //pack();
-                    widgets.getCurrent().gainFocus();
+                    widgetManager.getCurrent().gainFocus();
                     repaint();
                 }
             }
@@ -96,8 +88,8 @@ public class Client extends JFrame implements WindowListener {
     @Override
     public void windowClosing(WindowEvent windowEvent) {
         dispose();
-        if (widgets != null) {
-            widgets.close();
+        if (widgetManager != null) {
+            widgetManager.close();
         }
         System.exit(0);
     }

@@ -33,7 +33,7 @@ public class ClientMenu extends JPanel implements MouseListener, KeyListener {
         fullScreenButton = new JToggleButton(expandIcon);
         fullScreenButton.enableInputMethods(true);
         fullScreenButton.setEnabled(false);
-        fullScreenButton.addMouseListener(this);
+        //fullScreenButton.addMouseListener(this);
 
         add(search);
         add(fullScreenButton);
@@ -74,11 +74,11 @@ public class ClientMenu extends JPanel implements MouseListener, KeyListener {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    if (ctx.getWidgets().getCurrent() instanceof RuneWiki) {
-                        ((RuneWiki) ctx.getWidgets().getCurrent()).searchWiki(search.getText());
+                    if (ctx.getWidgetManager().getCurrent() instanceof RuneWiki) {
+                        ((RuneWiki) ctx.getWidgetManager().getCurrent()).searchWiki(search.getText());
                         search.setText("");
                     } else {
-                        ctx.getWidgets().addWidget(new RuneWiki(search.getText()));
+                        ctx.getWidgetManager().addWidget(new RuneWiki(search.getText()));
                         search.setText("");
                     }
                 }

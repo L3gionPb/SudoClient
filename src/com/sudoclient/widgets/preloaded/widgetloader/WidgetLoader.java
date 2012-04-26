@@ -1,6 +1,6 @@
 package com.sudoclient.widgets.preloaded.widgetloader;
 
-import com.sudoclient.widgets.Widgets;
+import com.sudoclient.widgets.WidgetManager;
 import com.sudoclient.widgets.api.Widget;
 import com.sudoclient.widgets.api.WidgetPreamble;
 import com.sudoclient.widgets.preloaded.clock.Clock;
@@ -19,13 +19,12 @@ import java.util.HashMap;
 public class WidgetLoader extends Widget {
     private static HashMap<WidgetPreamble, Class<? extends Widget>> widgetHashMap;
     private JPanel viewField;
-    private JTextField search;
-    private Widgets ctx;
+    private WidgetManager ctx;
 
-    public WidgetLoader(Widgets ctx) {
+    public WidgetLoader(WidgetManager ctx) {
         this.ctx = ctx;
         viewField = new JPanel(new GridLayout(3, 0, 5, 5));
-        fillViewField("", 0);
+        fillViewField();
         add(viewField, BorderLayout.CENTER);
     }
 
@@ -43,7 +42,7 @@ public class WidgetLoader extends Widget {
         widgetHashMap.put(Clock.class.getAnnotation(WidgetPreamble.class), Clock.class);
     }
 
-    private void fillViewField(String text, int page) {
+    private void fillViewField() {
         for (WidgetPreamble widgetPreamble : widgetHashMap.keySet()) {
             viewField.add(new WidgetLoaderComponent(this, widgetPreamble));
         }

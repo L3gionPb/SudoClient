@@ -21,12 +21,7 @@ public class WidgetLoaderComponent extends JPanel implements MouseListener {
         this.ctx = ctx;
         this.preamble = preamble;
         setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawString(preamble.name(), 10, 5);
+        this.add(new JLabel(preamble.name()));
     }
 
     @Override

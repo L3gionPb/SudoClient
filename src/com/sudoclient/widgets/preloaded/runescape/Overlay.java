@@ -9,26 +9,31 @@ import java.awt.image.BufferedImage;
  * Date: 4/23/12
  * Time: 7:39 PM
  */
-public class Overlay extends JPanel {
+public class Overlay extends Window {
     private BufferedImage image, buffer;
 
-    public Overlay() {
-        super();
-        setOpaque(false);
-        image = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);
-        buffer = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);
+    public Overlay(JFrame owner, Rectangle bounds) {
+        super(owner);
+        setVisible(true);
+        setAlwaysOnTop(true);
+        setBounds(bounds);
     }
 
     @Override
     public void paint(Graphics graphics) {
         super.paint(graphics);
-        //graphics.drawImage(image, 0, 0, null);
-        graphics.setColor(Color.RED);
-        graphics.drawString("TESTING", 100, 100);
+        graphics.drawImage(image, 0, 0, null);
     }
 
     public Graphics getBufferGraphics() {
         image.getGraphics().drawImage(buffer, 0, 0, null);
         return buffer.getGraphics();
+    }
+
+    @Override
+    public void setBounds(Rectangle bounds) {
+        super.setBounds(bounds);
+        image = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_ARGB);
+        buffer = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_ARGB);
     }
 }

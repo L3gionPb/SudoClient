@@ -15,7 +15,7 @@ import java.awt.event.MouseListener;
  * Time: 5:57 AM
  */
 public class Tab extends JToggleButton implements MouseListener {
-    private static Widgets ctx = null;
+    private static WidgetManager ctx = null;
     private Widget widget;
 
     /**
@@ -40,6 +40,7 @@ public class Tab extends JToggleButton implements MouseListener {
             setMinimumSize(new Dimension(Integer.MAX_VALUE, 20));
             add(new JLabel(widget.getPreamble().name()));
             setToolTipText(getAuthorsText() + "\n" + getDescText());
+            addMouseListener(this);
         }
 
         enableInputMethods(true);
@@ -53,7 +54,7 @@ public class Tab extends JToggleButton implements MouseListener {
      * @param ctx the context
      * @throws RuntimeException if context has been set
      */
-    public static void setContext(Widgets ctx) throws RuntimeException {
+    public static void setContext(WidgetManager ctx) throws RuntimeException {
         if (Tab.ctx == null) {
             Tab.ctx = ctx;
         } else {
