@@ -68,7 +68,11 @@ public final class Runescape extends Widget implements Runnable, AppletStub {
         }
     }
 
-    public void kill() {
+    /**
+     * Called when client is shutting down
+     */
+    @Override
+    public void onShutdown() {
         alive = false;
         synchronized (client.getTreeLock()) {
             client.destroy();
@@ -89,7 +93,6 @@ public final class Runescape extends Widget implements Runnable, AppletStub {
      */
     @Override
     public void gainFocus() {
-        client.validate();
         setVisible(true);
         requestFocus();
     }

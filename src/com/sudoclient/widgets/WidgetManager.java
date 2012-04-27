@@ -3,7 +3,6 @@ package com.sudoclient.widgets;
 import com.sudoclient.client.Client;
 import com.sudoclient.client.ClientMenu;
 import com.sudoclient.client.overlayevents.OverlayListener;
-import com.sudoclient.client.overlayevents.OverlayManager;
 import com.sudoclient.widgets.api.Widget;
 import com.sudoclient.widgets.preloaded.runescape.Runescape;
 import com.sudoclient.widgets.preloaded.widgetloader.WidgetLoader;
@@ -20,7 +19,7 @@ import java.util.ArrayList;
 public class WidgetManager extends JPanel {
     private final Client ctx;
     private final Tab ADD_TAB;
-    private final OverlayManager overlayManager;
+    //private final OverlayManager overlayManager;
     private JPanel tabPanel;
     private ClientMenu menu;
     private JPanel menuBar;
@@ -33,7 +32,7 @@ public class WidgetManager extends JPanel {
         this.ctx = ctx;
 
         menu = new ClientMenu(ctx);
-        overlayManager = new OverlayManager(this);
+        //overlayManager = new OverlayManager(this);
 
         Widget.setContext(this);
         WidgetLoader.loadLocalWidgets();
@@ -54,8 +53,10 @@ public class WidgetManager extends JPanel {
     }
 
     public void close() {
-        overlayManager.kill();
-        runescape.kill();
+        //overlayManager.kill();
+        for (Widget widget : widgets) {
+            widget.onShutdown();
+        }
     }
 
     private Widget initRSWidget() {
@@ -67,7 +68,7 @@ public class WidgetManager extends JPanel {
 
     public void addWidget(Widget widget) {
         if (widget instanceof OverlayListener) {
-            overlayManager.addListener((OverlayListener) widget);
+            //overlayManager.addListener((OverlayListener) widget);
         }
 
         widgets.add(widget);
@@ -76,7 +77,7 @@ public class WidgetManager extends JPanel {
 
     public void removeWidget(Widget widget) {
         if (widget instanceof OverlayListener) {
-            overlayManager.removeListener((OverlayListener) widget);
+            //overlayManager.removeListener((OverlayListener) widget);
         }
 
         int index = widgets.indexOf(widget);

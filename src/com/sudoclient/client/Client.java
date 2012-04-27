@@ -2,10 +2,12 @@ package com.sudoclient.client;
 
 import com.sudoclient.widgets.WidgetManager;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.IOException;
 
 /**
  * User: deprecated
@@ -21,6 +23,10 @@ public class Client extends JFrame implements WindowListener {
 
     public Client() {
         super("SudoClient");
+        try {
+            setIconImage(ImageIO.read(getClass().getResource("/resources/icon.png")));
+        } catch (IOException ignored) {
+        }
         addWindowListener(this);
         fullscreen = false;
         device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -44,14 +50,14 @@ public class Client extends JFrame implements WindowListener {
         pack();
     }
 
-    public void setFullscreen(final boolean fullscreen) {
+    public void setFullScreen(final boolean fullScreen) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                if (Client.this.fullscreen != fullscreen && device.isFullScreenSupported()) {
-                    Client.this.fullscreen = fullscreen;
+                if (Client.this.fullscreen != fullScreen && device.isFullScreenSupported()) {
+                    Client.this.fullscreen = fullScreen;
 
-                    if (!fullscreen) {
+                    if (!fullScreen) {
                         device.setDisplayMode(dispModeOld);
                         setVisible(false);
                         dispose();
@@ -78,7 +84,7 @@ public class Client extends JFrame implements WindowListener {
     }
 
     public void toggleFullScreen() {
-        setFullscreen(!fullscreen);
+        setFullScreen(!fullscreen);
     }
 
     @Override
@@ -87,10 +93,11 @@ public class Client extends JFrame implements WindowListener {
 
     @Override
     public void windowClosing(WindowEvent windowEvent) {
-        dispose();
+        setVisible(false);
         if (widgetManager != null) {
             widgetManager.close();
         }
+        dispose();
         System.exit(0);
     }
 

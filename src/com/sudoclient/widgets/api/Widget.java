@@ -40,6 +40,7 @@ public class Widget extends JPanel {
         preamble = this.getClass().getAnnotation(WidgetPreamble.class);
         idNum = IdGenerator.getNext();
         tab = new Tab(this);
+        gainFocus();
     }
 
     /**
@@ -53,6 +54,12 @@ public class Widget extends JPanel {
      */
     public void gainFocus() {
         requestFocus();
+    }
+
+    /**
+     * Called when client is shutting down
+     */
+    public void onShutdown() {
     }
 
     /**
