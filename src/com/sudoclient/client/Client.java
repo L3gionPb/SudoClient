@@ -17,18 +17,19 @@ import java.io.IOException;
 
 public class Client extends JFrame implements WindowListener {
     private WidgetManager widgetManager;
-    private boolean fullscreen;
+    private boolean fullscreenMode;
     private GraphicsDevice device;
     private DisplayMode dispModeOld = null;
+    private FullScreen fullScreen;
 
     public Client() {
-        super("SudoClient v0.01");
+        super("SudoClient v0.02");
         try {
-            setIconImage(ImageIO.read(getClass().getResource("/resources/icon.png")));
+            setIconImage(ImageIO.read(getClass().getResource("/resources/images/icon.png")));
         } catch (IOException ignored) {
         }
         addWindowListener(this);
-        fullscreen = false;
+        fullscreenMode = false;
         device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
         setLayout(new BorderLayout());
@@ -50,33 +51,23 @@ public class Client extends JFrame implements WindowListener {
         pack();
     }
 
-    public void setFullScreen(final boolean fullScreen) {
+    public void setFullScreen(final boolean fullScreenMode) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                if (Client.this.fullscreen != fullScreen && device.isFullScreenSupported()) {
-                    Client.this.fullscreen = fullScreen;
+                if (Client.this.fullscreenMode != fullScreenMode && device.isFullScreenSupported()) {
+                    Client.this.fullscreenMode = fullScreenMode;
 
-                    if (!fullScreen) {
-                        device.setDisplayMode(dispModeOld);
-                        setVisible(false);
-                        dispose();
-                        setUndecorated(false);
-                        device.setFullScreenWindow(null);
-                        pack();
-                        //setSize(800, 600);
-                        setLocationRelativeTo(null);
-                        setVisible(true);
+                    if (!fullScreenMode) {
+                        fullScreen.exit();
+                        device.setDisplayMode(fullScreen.getDispModeOld());
                     } else {
-                        dispModeOld = device.getDisplayMode();
-                        setVisible(false);
-                        dispose();
-                        setUndecorated(true);
-                        device.setFullScreenWindow(Client.this);
+                        if (fullScreen == null) {
+                            fullScreen = new FullScreen(device);
+                        }
+                        fullScreen.startFullScreen(Client.this);
                     }
 
-                    //pack();
-                    widgetManager.getCurrent().gainFocus();
                     repaint();
                 }
             }
@@ -84,7 +75,11 @@ public class Client extends JFrame implements WindowListener {
     }
 
     public void toggleFullScreen() {
-        setFullScreen(!fullscreen);
+        setFullScreen(!fullscreenMode);
+    }
+
+    public boolean isFullscreenMode() {
+        return fullscreenMode;
     }
 
     @Override

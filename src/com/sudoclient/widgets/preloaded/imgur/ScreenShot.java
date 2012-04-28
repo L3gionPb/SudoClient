@@ -1,5 +1,6 @@
 package com.sudoclient.widgets.preloaded.imgur;
 
+import com.sudoclient.client.ClientMenu;
 import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
@@ -29,7 +30,7 @@ public class ScreenShot {
     private final static char FS = File.separatorChar;
     private static Robot robot = null;
 
-    public static void takeScreenShot(final Rectangle bounds) {
+    public static void takeScreenShot(final Rectangle bounds, final ClientMenu ctx) {
         if (robot == null) {
             try {
                 robot = new Robot();
@@ -41,10 +42,16 @@ public class ScreenShot {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                BufferedImage screenShot = robot.createScreenCapture(bounds);
+                BufferedImage screenShot;
+                if (ctx.isFullScreen()) {
+                    screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
+                } else {
+                    screenShot = robot.createScreenCapture(bounds);
+                }
                 saveScreenShot(screenShot);
                 String url = upload(screenShot);
                 copyToClipboard(url);
+                ctx.screenShotFinished();
             }
         }).start();
     }

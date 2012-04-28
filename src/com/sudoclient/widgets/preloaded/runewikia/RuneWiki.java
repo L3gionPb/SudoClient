@@ -22,7 +22,7 @@ import java.net.URL;
 
 @WidgetPreamble(name = "RuneWikia", authors = {"Deprecated"})
 public class RuneWiki extends Widget implements HyperlinkListener {
-    private static final URL CSS = RuneWiki.class.getResource("/resources/runewikia.css");
+    private static final URL CSS = RuneWiki.class.getResource("/resources/css/runewikia.css");
     private final String[] SEARCH_URL = {"http://runescape.wikia.com/wiki/index.php?search=", "&fulltext=0"};
     private PageExecutorService executor;
 
@@ -49,6 +49,14 @@ public class RuneWiki extends Widget implements HyperlinkListener {
     }
 
     /**
+     * Called when the Widget gains focus
+     */
+    @Override
+    public void gainFocus() {
+        revalidate();
+    }
+
+    /**
      * Called when client is shutting down
      */
     @Override
@@ -60,7 +68,8 @@ public class RuneWiki extends Widget implements HyperlinkListener {
     public void hyperlinkUpdate(HyperlinkEvent event) {
         if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
             if (event.getDescription().startsWith("#")) {
-                executor.follow(event.getDescription().substring(1));
+                //executor.follow(event.getDescription().substring(1));
+                //TODO build a hashmap of caret positions for TOC ahrefs
             } else if (event.getDescription().equals("BACK")) {
                 executor.back();
             } else {

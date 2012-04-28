@@ -19,6 +19,8 @@ public class ClientMenu extends JPanel implements MouseListener, KeyListener {
     private final Client ctx;
     private final JTextField search;
     private final JToggleButton fullScreenButton, screenShotButton;
+    private final ImageIcon screenShotIcon, loadingSSIcon, expandIcon, unexpandIcon;
+    private boolean ssBlock;
 
     public ClientMenu(Client ctx) {
         super(new FlowLayout(FlowLayout.RIGHT));
@@ -29,35 +31,55 @@ public class ClientMenu extends JPanel implements MouseListener, KeyListener {
         search.addMouseListener(this);
         search.addKeyListener(this);
 
-        ImageIcon expandIcon = new ImageIcon(this.getClass().getResource("/resources/expand.png"));
+        expandIcon = new ImageIcon(this.getClass().getResource("/resources/images/expand.png"));
+        unexpandIcon = new ImageIcon(this.getClass().getResource("/resources/images/unexpand.png"));
         fullScreenButton = new JToggleButton(expandIcon);
         fullScreenButton.enableInputMethods(true);
         fullScreenButton.setEnabled(false);
         //fullScreenButton.addMouseListener(this);
 
-        ImageIcon screenShotIcon = new ImageIcon(this.getClass().getResource("/resources/screenshot.png"));
+        screenShotIcon = new ImageIcon(this.getClass().getResource("/resources/images/screenshot.png"));
+        loadingSSIcon = new ImageIcon(this.getClass().getResource("/resources/images/loading.gif"));
         screenShotButton = new JToggleButton(screenShotIcon);
         screenShotButton.setToolTipText("Take a ScreenShot");
         screenShotButton.enableInputMethods(true);
         screenShotButton.setEnabled(false);
         screenShotButton.addMouseListener(this);
+        ssBlock = false;
 
         add(search);
         add(screenShotButton);
         //add(fullScreenButton);
     }
 
+    public void screenShotFinished() {
+        screenShotButton.setIcon(screenShotIcon);
+        ssBlock = false;
+    }
+
+    public boolean isFullScreen() {
+        return ctx.isFullscreenMode();
+    }
+
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
         if (mouseEvent.getComponent().equals(fullScreenButton)) {
             ctx.toggleFullScreen();
+            if (ctx.isFullscreenMode()) {
+                fullScreenButton.setIcon(expandIcon);
+            } else {
+                fullScreenButton.setIcon(unexpandIcon);
+            }
         } else if (mouseEvent.getComponent().equals(search)) {
             search.selectAll();
-        } else if (mouseEvent.getComponent().equals(screenShotButton)) {
+        } else if (!ssBlock && mouseEvent.getComponent().equals(screenShotButton)) {
+            ssBlock = true;
             Rectangle temp = ctx.getWidgetManager().getBounds();
             temp.translate(ctx.getRootPane().getX(), ctx.getRootPane().getY());
             temp.translate(ctx.getX(), ctx.getY());
-            ScreenShot.takeScreenShot(temp);
+
+            screenShotButton.setIcon(loadingSSIcon);
+            ScreenShot.takeScreenShot(temp, this);
         }
     }
 
@@ -83,7 +105,7 @@ public class ClientMenu extends JPanel implements MouseListener, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent keyEvent) {
-        if (search.hasFocus() && (keyEvent.isActionKey() || keyEvent.getKeyCode() == KeyEvent.VK_ENTER)) {
+        if (search.hasFocus() && (keyEvent.getKeyCode() == KeyEvent.VK_ENTER)) {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {

@@ -26,7 +26,7 @@ public final class Runescape extends Widget implements Runnable, AppletStub {
 
     public Runescape() {
         setBackground(Color.BLACK);
-        splash = new JLabel(new ImageIcon(this.getClass().getResource("/resources/splash.gif")));
+        splash = new JLabel(new ImageIcon(this.getClass().getResource("/resources/images/splash.gif")));
         add(splash, BorderLayout.CENTER);
 
         alive = true;
@@ -75,6 +75,7 @@ public final class Runescape extends Widget implements Runnable, AppletStub {
     public void onShutdown() {
         alive = false;
         synchronized (client.getTreeLock()) {
+            client.stop();
             client.destroy();
         }
         client = null;
