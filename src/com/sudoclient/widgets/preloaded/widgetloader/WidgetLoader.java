@@ -22,7 +22,7 @@ public class WidgetLoader extends Widget {
 
     public WidgetLoader(WidgetManager ctx) {
         this.ctx = ctx;
-        viewField = new JPanel(new GridLayout(3, 0, 5, 5));
+        viewField = new JPanel(new BorderLayout());
         fillViewField();
         add(viewField, BorderLayout.CENTER);
     }
@@ -42,8 +42,12 @@ public class WidgetLoader extends Widget {
     }
 
     private void fillViewField() {
-        for (WidgetPreamble widgetPreamble : widgetHashMap.keySet()) {
-            viewField.add(new WidgetLoaderComponent(this, widgetPreamble));
+        if (widgetHashMap.size() == 0) {
+            viewField.add(new JLabel("No Widgets have been added yet"), BorderLayout.CENTER);
+        } else {
+            for (WidgetPreamble widgetPreamble : widgetHashMap.keySet()) {
+                viewField.add(new WidgetLoaderComponent(this, widgetPreamble));
+            }
         }
     }
 }

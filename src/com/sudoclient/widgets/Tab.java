@@ -35,7 +35,8 @@ public class Tab extends JToggleButton implements MouseListener {
 
         if (widget == null || widget.getPreamble() == null) {
             setMaximumSize(new Dimension(20, 20));
-            add(new JLabel(new ImageIcon(this.getClass().getResource("/resources/newTab.png"))));
+            setIcon(new ImageIcon(this.getClass().getResource("/resources/newTab.png")));
+            setToolTipText("Open up a new Tab");
         } else {
             setMinimumSize(new Dimension(Integer.MAX_VALUE, 20));
             add(new JLabel(widget.getPreamble().name()));

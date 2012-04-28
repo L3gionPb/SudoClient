@@ -1,6 +1,6 @@
 package com.sudoclient.client;
 
-import com.sudoclient.widgets.preloaded.imgur.ScreenShotFactory;
+import com.sudoclient.widgets.preloaded.imgur.ScreenShot;
 import com.sudoclient.widgets.preloaded.runewikia.RuneWiki;
 
 import javax.swing.*;
@@ -37,13 +37,14 @@ public class ClientMenu extends JPanel implements MouseListener, KeyListener {
 
         ImageIcon screenShotIcon = new ImageIcon(this.getClass().getResource("/resources/screenshot.png"));
         screenShotButton = new JToggleButton(screenShotIcon);
+        screenShotButton.setToolTipText("Take a ScreenShot");
         screenShotButton.enableInputMethods(true);
         screenShotButton.setEnabled(false);
         screenShotButton.addMouseListener(this);
 
         add(search);
         add(screenShotButton);
-        add(fullScreenButton);
+        //add(fullScreenButton);
     }
 
     @Override
@@ -56,7 +57,7 @@ public class ClientMenu extends JPanel implements MouseListener, KeyListener {
             Rectangle temp = ctx.getWidgetManager().getBounds();
             temp.translate(ctx.getRootPane().getX(), ctx.getRootPane().getY());
             temp.translate(ctx.getX(), ctx.getY());
-            ScreenShotFactory.takeScreenShot(temp);
+            ScreenShot.takeScreenShot(temp);
         }
     }
 

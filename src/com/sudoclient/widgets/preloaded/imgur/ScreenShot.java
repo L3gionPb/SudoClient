@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  * Date: 4/27/12
  * Time: 8:39 PM
  */
-public class ScreenShotFactory {
+public class ScreenShot {
     private final static Pattern IMAGE_URL_PATTERN = Pattern.compile("<original>(.+)</original>");
     private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM-dd-yyyy-HH:mm");
     private final static String API_KEY = "10ff513c98f16f42e5dc1c2f305eb985";

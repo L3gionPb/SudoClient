@@ -22,7 +22,7 @@ public class Client extends JFrame implements WindowListener {
     private DisplayMode dispModeOld = null;
 
     public Client() {
-        super("SudoClient");
+        super("SudoClient v0.01");
         try {
             setIconImage(ImageIO.read(getClass().getResource("/resources/icon.png")));
         } catch (IOException ignored) {

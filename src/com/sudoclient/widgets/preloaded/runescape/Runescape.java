@@ -94,7 +94,9 @@ public final class Runescape extends Widget implements Runnable, AppletStub {
     @Override
     public void gainFocus() {
         setVisible(true);
-        requestFocus();
+        if (client != null) {
+            client.requestFocus();
+        }
     }
 
     public Applet getClient() {
