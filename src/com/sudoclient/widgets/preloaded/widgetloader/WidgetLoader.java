@@ -3,7 +3,6 @@ package com.sudoclient.widgets.preloaded.widgetloader;
 import com.sudoclient.widgets.WidgetManager;
 import com.sudoclient.widgets.api.Widget;
 import com.sudoclient.widgets.api.WidgetPreamble;
-import com.sudoclient.widgets.preloaded.clock.Clock;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +38,7 @@ public class WidgetLoader extends Widget {
 
     public static void loadLocalWidgets() {
         widgetHashMap = new HashMap<WidgetPreamble, Class<? extends Widget>>();
-        widgetHashMap.put(Clock.class.getAnnotation(WidgetPreamble.class), Clock.class);
+        //TODO Add more Widgets
     }
 
     private void fillViewField() {

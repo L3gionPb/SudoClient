@@ -1,5 +1,6 @@
 package com.sudoclient.client;
 
+import com.sudoclient.widgets.preloaded.imgur.ScreenShotFactory;
 import com.sudoclient.widgets.preloaded.runewikia.RuneWiki;
 
 import javax.swing.*;
@@ -15,10 +16,9 @@ import java.awt.event.MouseListener;
  * Time: 10:26 PM
  */
 public class ClientMenu extends JPanel implements MouseListener, KeyListener {
-    private final ImageIcon expandIcon;
     private final Client ctx;
-    private final JToggleButton fullScreenButton;
     private final JTextField search;
+    private final JToggleButton fullScreenButton, screenShotButton;
 
     public ClientMenu(Client ctx) {
         super(new FlowLayout(FlowLayout.RIGHT));
@@ -29,22 +29,34 @@ public class ClientMenu extends JPanel implements MouseListener, KeyListener {
         search.addMouseListener(this);
         search.addKeyListener(this);
 
-        expandIcon = new ImageIcon(this.getClass().getResource("/resources/expand.png"));
+        ImageIcon expandIcon = new ImageIcon(this.getClass().getResource("/resources/expand.png"));
         fullScreenButton = new JToggleButton(expandIcon);
         fullScreenButton.enableInputMethods(true);
         fullScreenButton.setEnabled(false);
         //fullScreenButton.addMouseListener(this);
 
+        ImageIcon screenShotIcon = new ImageIcon(this.getClass().getResource("/resources/screenshot.png"));
+        screenShotButton = new JToggleButton(screenShotIcon);
+        screenShotButton.enableInputMethods(true);
+        screenShotButton.setEnabled(false);
+        screenShotButton.addMouseListener(this);
+
         add(search);
+        add(screenShotButton);
         add(fullScreenButton);
     }
 
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
-        if (mouseEvent.getComponent() instanceof JToggleButton) {
+        if (mouseEvent.getComponent().equals(fullScreenButton)) {
             ctx.toggleFullScreen();
-        } else {
+        } else if (mouseEvent.getComponent().equals(search)) {
             search.selectAll();
+        } else if (mouseEvent.getComponent().equals(screenShotButton)) {
+            Rectangle temp = ctx.getWidgetManager().getBounds();
+            temp.translate(ctx.getRootPane().getX(), ctx.getRootPane().getY());
+            temp.translate(ctx.getX(), ctx.getY());
+            ScreenShotFactory.takeScreenShot(temp);
         }
     }
 
