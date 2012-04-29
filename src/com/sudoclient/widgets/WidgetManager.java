@@ -3,9 +3,9 @@ package com.sudoclient.widgets;
 import com.sudoclient.client.Client;
 import com.sudoclient.client.ClientMenu;
 import com.sudoclient.client.overlayevents.OverlayListener;
-import com.sudoclient.widgets.api.Widget;
+import com.sudoclient.widgets.api.WidgetAdapter;
 import com.sudoclient.widgets.preloaded.runescape.Runescape;
-import com.sudoclient.widgets.preloaded.widgetloader.WidgetLoader;
+import com.sudoclient.widgets.preloaded.widgetloader.WidgetAdapterLoader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,8 +23,8 @@ public class WidgetManager extends JPanel {
     private JPanel tabPanel;
     private ClientMenu menu;
     private JPanel menuBar;
-    private ArrayList<Widget> widgets;
-    private Widget current;
+    private ArrayList<WidgetAdapter> widgetAdapters;
+    private WidgetAdapter current;
     private Runescape runescape;
 
     public WidgetManager(Client ctx) {
@@ -34,8 +34,8 @@ public class WidgetManager extends JPanel {
         menu = new ClientMenu(ctx);
         //overlayManager = new OverlayManager(this);
 
-        Widget.setContext(this);
-        WidgetLoader.loadLocalWidgets();
+        WidgetAdapter.setContext(this);
+        WidgetAdapterLoader.loadLocalWidgets();
 
         Tab.setContext(this);
         ADD_TAB = new Tab();
@@ -47,79 +47,79 @@ public class WidgetManager extends JPanel {
         tabPanel = new JPanel(flowLayout);
         tabPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 22));
 
-        widgets = new ArrayList<Widget>();
+        widgetAdapters = new ArrayList<WidgetAdapter>();
         current = initRSWidget();
         packTabPanel();
     }
 
     public void close() {
         //overlayManager.kill();
-        for (Widget widget : widgets) {
-            widget.onShutdown();
+        for (WidgetAdapter widgetAdapter : widgetAdapters) {
+            widgetAdapter.onShutdown();
         }
     }
 
-    private Widget initRSWidget() {
+    private WidgetAdapter initRSWidget() {
         runescape = new Runescape();
         add(runescape, BorderLayout.CENTER);
-        widgets.add(runescape);
+        widgetAdapters.add(runescape);
         return runescape;
     }
 
-    public void addWidget(Widget widget) {
-        if (widget instanceof OverlayListener) {
+    public void addWidget(WidgetAdapter widgetAdapter) {
+        if (widgetAdapter instanceof OverlayListener) {
             //overlayManager.addListener((OverlayListener) widget);
         }
 
-        widgets.add(widget);
-        setCurrent(widget);
+        widgetAdapters.add(widgetAdapter);
+        setCurrent(widgetAdapter);
     }
 
-    public void removeWidget(Widget widget) {
-        if (widget instanceof OverlayListener) {
+    public void removeWidget(WidgetAdapter widgetAdapter) {
+        if (widgetAdapter instanceof OverlayListener) {
             //overlayManager.removeListener((OverlayListener) widget);
         }
 
-        int index = widgets.indexOf(widget);
-        if (widgets.size() > index + 1) {
-            setCurrent(widgets.get(index + 1));
+        int index = widgetAdapters.indexOf(widgetAdapter);
+        if (widgetAdapters.size() > index + 1) {
+            setCurrent(widgetAdapters.get(index + 1));
         } else {
-            setCurrent(widgets.get(index - 1));
+            setCurrent(widgetAdapters.get(index - 1));
         }
 
-        widgets.remove(widget);
+        widgetAdapters.remove(widgetAdapter);
         packTabPanel();
         updateUI();
     }
 
-    public void setCurrent(final Widget widget) {
-        if (!widget.equals(current)) {
+    public void setCurrent(final WidgetAdapter widgetAdapter) {
+        if (!widgetAdapter.equals(current)) {
             current.loseFocus();
             if (!(current.equals(runescape))) {
                 remove(current);
             }
 
-            if (!(widget.equals(runescape))) {
-                add(widget, BorderLayout.CENTER);
+            if (!(widgetAdapter.equals(runescape))) {
+                add(widgetAdapter, BorderLayout.CENTER);
             } else {
                 ((BorderLayout) getLayout()).addLayoutComponent(runescape, BorderLayout.CENTER);
             }
-            widget.gainFocus();
+            widgetAdapter.gainFocus();
 
-            current = widget;
+            current = widgetAdapter;
             packTabPanel();
         }
     }
 
-    public Widget getCurrent() {
+    public WidgetAdapter getCurrent() {
         return current;
     }
 
     public void packTabPanel() {
         tabPanel.removeAll();
-        for (Widget widget : widgets) {
-            Tab tab = widget.getTab();
-            tab.setSelected(widget.equals(current));
+        for (WidgetAdapter widgetAdapter : widgetAdapters) {
+            Tab tab = widgetAdapter.getTab();
+            tab.setSelected(widgetAdapter.equals(current));
             tabPanel.add(tab);
         }
         tabPanel.add(ADD_TAB);

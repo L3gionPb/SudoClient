@@ -13,7 +13,7 @@ import java.awt.*;
  * Time: 5:32 AM
  */
 
-public class Widget extends JPanel {
+public class WidgetAdapter extends JPanel {
     private static WidgetManager ctx = null;
     private Tab tab;
     private int idNum;
@@ -22,7 +22,7 @@ public class Widget extends JPanel {
     /**
      * Create a new Widget with a standard BorderLayout
      */
-    public Widget() {
+    public WidgetAdapter() {
         this(new BorderLayout());
     }
 
@@ -31,7 +31,7 @@ public class Widget extends JPanel {
      *
      * @param layoutManager the layout manager
      */
-    public Widget(LayoutManager layoutManager) {
+    public WidgetAdapter(LayoutManager layoutManager) {
         super(layoutManager);
         if (!(this instanceof Runescape)) {
             setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -86,11 +86,11 @@ public class Widget extends JPanel {
      * @param ctx the context
      */
     public static void setContext(WidgetManager ctx) {
-        if (Widget.ctx != null) {
+        if (WidgetAdapter.ctx != null) {
             throw new RuntimeException("Widget context cannot be reset");
         }
 
-        Widget.ctx = ctx;
+        WidgetAdapter.ctx = ctx;
     }
 
     public final int getCtxX() {
@@ -109,11 +109,11 @@ public class Widget extends JPanel {
      * Compares two objects for equality
      *
      * @param o the object to compare to
-     * @return true if o is a Widget and {@link Widget#equals(Widget)} is true
+     * @return true if o is a Widget and {@link WidgetAdapter#equals(WidgetAdapter)} is true
      */
     @Override
     public final boolean equals(Object o) {
-        return (o instanceof Widget) && equals((Widget) o);
+        return (o instanceof WidgetAdapter) && equals((WidgetAdapter) o);
     }
 
     /**
@@ -122,7 +122,7 @@ public class Widget extends JPanel {
      * @param w widget to compare to
      * @return true if the widgets are equal, else false
      */
-    public final boolean equals(Widget w) {
+    public final boolean equals(WidgetAdapter w) {
         return (w == null ? -1 : w.idNum) == idNum;
     }
 

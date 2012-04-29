@@ -1,8 +1,8 @@
 package com.sudoclient.widgets;
 
-import com.sudoclient.widgets.api.Widget;
+import com.sudoclient.widgets.api.WidgetAdapter;
 import com.sudoclient.widgets.preloaded.runescape.Runescape;
-import com.sudoclient.widgets.preloaded.widgetloader.WidgetLoader;
+import com.sudoclient.widgets.preloaded.widgetloader.WidgetAdapterLoader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +16,7 @@ import java.awt.event.MouseListener;
  */
 public class Tab extends JToggleButton implements MouseListener {
     private static WidgetManager ctx = null;
-    private Widget widget;
+    private WidgetAdapter widgetAdapter;
 
     /**
      * Create a new tab button
@@ -28,20 +28,19 @@ public class Tab extends JToggleButton implements MouseListener {
     /**
      * Create a tab for a defined widget
      *
-     * @param widget the widget
+     * @param widgetAdapter the widget
      */
-    public Tab(Widget widget) {
-        this.widget = widget;
+    public Tab(WidgetAdapter widgetAdapter) {
+        this.widgetAdapter = widgetAdapter;
 
-        if (widget == null || widget.getPreamble() == null) {
+        if (widgetAdapter == null || widgetAdapter.getPreamble() == null) {
             setMaximumSize(new Dimension(20, 20));
             setIcon(new ImageIcon(this.getClass().getResource("/resources/images/newTab.png")));
             setToolTipText("Open up a new Tab");
         } else {
             setMinimumSize(new Dimension(Integer.MAX_VALUE, 20));
-            add(new JLabel(widget.getPreamble().name()));
+            add(new JLabel(widgetAdapter.getPreamble().name()));
             setToolTipText(getAuthorsText() + "\n" + getDescText());
-            addMouseListener(this);
         }
 
         enableInputMethods(true);
@@ -66,7 +65,7 @@ public class Tab extends JToggleButton implements MouseListener {
     private String getAuthorsText() {
         String s = "Created by ";
 
-        for (String s2 : widget.getPreamble().authors()) {
+        for (String s2 : widgetAdapter.getPreamble().authors()) {
             s += s2 + "   ";
         }
 
@@ -74,19 +73,27 @@ public class Tab extends JToggleButton implements MouseListener {
     }
 
     private String getDescText() {
-        return widget.getPreamble().description();
+        return widgetAdapter.getPreamble().description();
     }
 
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
-        if (widget != null) {
+        if (widgetAdapter != null) {
             if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
-                ctx.setCurrent(widget);
-            } else if (mouseEvent.getButton() == MouseEvent.BUTTON3 && !(widget instanceof Runescape)) {
-                ctx.removeWidget(widget);
+                ctx.setCurrent(widgetAdapter);
+            } else if (mouseEvent.getButton() == MouseEvent.BUTTON3) {
+                if (widgetAdapter instanceof Runescape) {
+                    ((Runescape) widgetAdapter).reset();
+
+
+                } else {
+                    ctx.removeWidget(widgetAdapter);
+                }
             }
         } else {
-            ctx.addWidget(new WidgetLoader(ctx));
+            if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
+                ctx.addWidget(new WidgetAdapterLoader(ctx));
+            }
         }
     }
 

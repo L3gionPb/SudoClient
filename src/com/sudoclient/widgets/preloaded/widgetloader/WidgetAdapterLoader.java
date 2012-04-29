@@ -1,7 +1,7 @@
 package com.sudoclient.widgets.preloaded.widgetloader;
 
 import com.sudoclient.widgets.WidgetManager;
-import com.sudoclient.widgets.api.Widget;
+import com.sudoclient.widgets.api.WidgetAdapter;
 import com.sudoclient.widgets.api.WidgetPreamble;
 
 import javax.swing.*;
@@ -15,12 +15,12 @@ import java.util.HashMap;
  */
 
 @WidgetPreamble(name = "Widgets", authors = {"Deprecated"})
-public class WidgetLoader extends Widget {
-    private static HashMap<WidgetPreamble, Class<? extends Widget>> widgetHashMap;
+public class WidgetAdapterLoader extends WidgetAdapter {
+    private static HashMap<WidgetPreamble, Class<? extends WidgetAdapter>> widgetHashMap;
     private JPanel viewField;
     private WidgetManager ctx;
 
-    public WidgetLoader(WidgetManager ctx) {
+    public WidgetAdapterLoader(WidgetManager ctx) {
         this.ctx = ctx;
         viewField = new JPanel(new BorderLayout());
         fillViewField();
@@ -37,7 +37,7 @@ public class WidgetLoader extends Widget {
     }
 
     public static void loadLocalWidgets() {
-        widgetHashMap = new HashMap<WidgetPreamble, Class<? extends Widget>>();
+        widgetHashMap = new HashMap<WidgetPreamble, Class<? extends WidgetAdapter>>();
         //TODO Add more Widgets
     }
 

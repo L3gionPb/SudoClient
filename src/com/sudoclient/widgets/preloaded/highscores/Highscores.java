@@ -1,6 +1,6 @@
 package com.sudoclient.widgets.preloaded.highscores;
 
-import com.sudoclient.widgets.api.Widget;
+import com.sudoclient.widgets.api.WidgetAdapter;
 import com.sudoclient.widgets.api.WidgetPreamble;
 
 /**
@@ -10,7 +10,7 @@ import com.sudoclient.widgets.api.WidgetPreamble;
  */
 
 @WidgetPreamble(name = "HighScores", authors = {"Deprecated"})
-public class Highscores extends Widget {
+public class Highscores extends WidgetAdapter {
     private final static String HIGHSCORES = "http://hiscore.runescape.com/index_lite.ws?player=";
 
     public Highscores() {

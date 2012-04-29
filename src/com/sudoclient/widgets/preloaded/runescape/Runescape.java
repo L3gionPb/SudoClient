@@ -1,6 +1,6 @@
 package com.sudoclient.widgets.preloaded.runescape;
 
-import com.sudoclient.widgets.api.Widget;
+import com.sudoclient.widgets.api.WidgetAdapter;
 import com.sudoclient.widgets.api.WidgetPreamble;
 
 import javax.swing.*;
@@ -17,7 +17,7 @@ import java.net.URL;
  */
 
 @WidgetPreamble(name = "Runescape", authors = {"Jagex"})
-public final class Runescape extends Widget implements Runnable, AppletStub {
+public final class Runescape extends WidgetAdapter implements Runnable, AppletStub {
     private final Object lock = new Object();
     private Applet client = new Applet();
     private RSClassLoader loader;
@@ -68,16 +68,28 @@ public final class Runescape extends Widget implements Runnable, AppletStub {
         }
     }
 
+    public void reset() {
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you wish to restart Runescape?",
+                "Confirm Runescape Restart", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            client.stop();
+            client.destroy();
+            removeAll();
+            add(splash, BorderLayout.CENTER);
+            updateUI();
+            new Thread(this).start();
+        }
+    }
+
     /**
      * Called when client is shutting down
      */
     @Override
     public void onShutdown() {
         alive = false;
-        synchronized (client.getTreeLock()) {
-            client.stop();
-            client.destroy();
-        }
+        client.stop();
+        client.destroy();
         client = null;
     }
 

@@ -1,6 +1,6 @@
 package com.sudoclient.widgets.preloaded.runewikia;
 
-import com.sudoclient.widgets.api.Widget;
+import com.sudoclient.widgets.api.WidgetAdapter;
 import com.sudoclient.widgets.api.WidgetPreamble;
 
 import javax.swing.*;
@@ -21,7 +21,7 @@ import java.net.URL;
  */
 
 @WidgetPreamble(name = "RuneWikia", authors = {"Deprecated"})
-public class RuneWiki extends Widget implements HyperlinkListener {
+public class RuneWiki extends WidgetAdapter implements HyperlinkListener {
     private static final URL CSS = RuneWiki.class.getResource("/resources/css/runewikia.css");
     private final String[] SEARCH_URL = {"http://runescape.wikia.com/wiki/index.php?search=", "&fulltext=0"};
     private PageExecutorService executor;

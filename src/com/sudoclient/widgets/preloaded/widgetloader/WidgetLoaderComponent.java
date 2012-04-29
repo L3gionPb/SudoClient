@@ -14,9 +14,9 @@ import java.awt.event.MouseListener;
  */
 public class WidgetLoaderComponent extends JPanel implements MouseListener {
     private WidgetPreamble preamble;
-    private WidgetLoader ctx;
+    private WidgetAdapterLoader ctx;
 
-    public WidgetLoaderComponent(WidgetLoader ctx, WidgetPreamble preamble) {
+    public WidgetLoaderComponent(WidgetAdapterLoader ctx, WidgetPreamble preamble) {
         addMouseListener(this);
         this.ctx = ctx;
         this.preamble = preamble;

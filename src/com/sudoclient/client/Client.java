@@ -19,11 +19,10 @@ public class Client extends JFrame implements WindowListener {
     private WidgetManager widgetManager;
     private boolean fullscreenMode;
     private GraphicsDevice device;
-    private DisplayMode dispModeOld = null;
     private FullScreen fullScreen;
 
     public Client() {
-        super("SudoClient v0.02");
+        super("SudoClient v0.03");
         try {
             setIconImage(ImageIO.read(getClass().getResource("/resources/images/icon.png")));
         } catch (IOException ignored) {
