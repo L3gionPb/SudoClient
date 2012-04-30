@@ -16,7 +16,7 @@ import java.net.URL;
  * Time: 9:17 AM
  */
 
-@WidgetPreamble(name = "Runescape", authors = {"Jagex"})
+@WidgetPreamble(name = "RuneScape", author = "Deprecated")
 public final class Runescape extends WidgetAdapter implements Runnable, AppletStub {
     private final Object lock = new Object();
     private Applet client = new Applet();

@@ -16,7 +16,7 @@ public @interface WidgetPreamble {
 
     String description() default "";
 
-    String[] authors();
+    String author();
 
     double version() default 1.0;
 }

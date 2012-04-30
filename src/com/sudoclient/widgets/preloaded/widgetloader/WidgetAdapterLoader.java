@@ -14,7 +14,7 @@ import java.util.HashMap;
  * Time: 6:08 AM
  */
 
-@WidgetPreamble(name = "Widgets", authors = {"Deprecated"})
+@WidgetPreamble(name = "Widgets", author = "Deprecated")
 public class WidgetAdapterLoader extends WidgetAdapter {
     private static HashMap<WidgetPreamble, Class<? extends WidgetAdapter>> widgetHashMap;
     private JPanel viewField;

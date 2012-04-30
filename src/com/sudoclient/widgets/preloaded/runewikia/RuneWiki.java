@@ -20,7 +20,7 @@ import java.net.URL;
  * Time: 7:20 AM
  */
 
-@WidgetPreamble(name = "RuneWikia", authors = {"Deprecated"})
+@WidgetPreamble(name = "RuneWikia", author = "Deprecated")
 public class RuneWiki extends WidgetAdapter implements HyperlinkListener {
     private static final URL CSS = RuneWiki.class.getResource("/resources/css/runewikia.css");
     private final String[] SEARCH_URL = {"http://runescape.wikia.com/wiki/index.php?search=", "&fulltext=0"};

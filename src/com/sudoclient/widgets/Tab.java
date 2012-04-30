@@ -63,13 +63,7 @@ public class Tab extends JToggleButton implements MouseListener {
     }
 
     private String getAuthorsText() {
-        String s = "Created by ";
-
-        for (String s2 : widgetAdapter.getPreamble().authors()) {
-            s += s2 + "   ";
-        }
-
-        return s;
+        return "Created by " + widgetAdapter.getPreamble().author();
     }
 
     private String getDescText() {
@@ -84,8 +78,6 @@ public class Tab extends JToggleButton implements MouseListener {
             } else if (mouseEvent.getButton() == MouseEvent.BUTTON3) {
                 if (widgetAdapter instanceof Runescape) {
                     ((Runescape) widgetAdapter).reset();
-
-
                 } else {
                     ctx.removeWidget(widgetAdapter);
                 }

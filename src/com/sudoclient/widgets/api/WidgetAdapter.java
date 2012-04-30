@@ -14,9 +14,9 @@ import java.awt.*;
  */
 
 public class WidgetAdapter extends JPanel {
+    private final int idNum;
     private static WidgetManager ctx = null;
     private Tab tab;
-    private int idNum;
     private WidgetPreamble preamble;
 
     /**
@@ -91,18 +91,6 @@ public class WidgetAdapter extends JPanel {
         }
 
         WidgetAdapter.ctx = ctx;
-    }
-
-    public final int getCtxX() {
-        return ctx.getX();
-    }
-
-    public final int getCtxY() {
-        return ctx.getY();
-    }
-
-    public final int getId() {
-        return idNum;
     }
 
     /**
