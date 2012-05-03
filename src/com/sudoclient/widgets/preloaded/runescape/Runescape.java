@@ -43,7 +43,7 @@ public final class Runescape extends WidgetAdapter implements Runnable, AppletSt
             if (client != null) {
                 try {
                     if (alive) {
-                        loader = new RSClassLoader();
+                        loader = new RSClassLoader(getCacheDirectory());
                     }
 
                     if (alive) {
@@ -115,10 +115,6 @@ public final class Runescape extends WidgetAdapter implements Runnable, AppletSt
         if (client != null) {
             client.requestFocus();
         }
-    }
-
-    public Applet getClient() {
-        return client;
     }
 
     public RSClassLoader getLoader() {

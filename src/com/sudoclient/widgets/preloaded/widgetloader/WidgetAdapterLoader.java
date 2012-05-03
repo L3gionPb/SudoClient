@@ -3,6 +3,7 @@ package com.sudoclient.widgets.preloaded.widgetloader;
 import com.sudoclient.widgets.WidgetManager;
 import com.sudoclient.widgets.api.WidgetAdapter;
 import com.sudoclient.widgets.api.WidgetPreamble;
+import com.sudoclient.widgets.preloaded.reflectionexplorer.ReflectionExplorer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,6 +40,8 @@ public class WidgetAdapterLoader extends WidgetAdapter {
     public static void loadLocalWidgets() {
         widgetHashMap = new HashMap<WidgetPreamble, Class<? extends WidgetAdapter>>();
         //TODO Add more Widgets
+
+        widgetHashMap.put(ReflectionExplorer.class.getAnnotation(WidgetPreamble.class), ReflectionExplorer.class);
     }
 
     private void fillViewField() {

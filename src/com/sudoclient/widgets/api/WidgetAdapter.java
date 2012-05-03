@@ -6,6 +6,7 @@ import com.sudoclient.widgets.preloaded.runescape.Runescape;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 
 /**
  * User: deprecated
@@ -15,6 +16,7 @@ import java.awt.*;
 
 public class WidgetAdapter extends JPanel {
     private final int idNum;
+    private final File WIDGET_CACHE;
     private static WidgetManager ctx = null;
     private Tab tab;
     private WidgetPreamble preamble;
@@ -38,6 +40,14 @@ public class WidgetAdapter extends JPanel {
         }
 
         preamble = this.getClass().getAnnotation(WidgetPreamble.class);
+
+        WIDGET_CACHE = new File(ctx.getCacheDirectory(), this.getClass().getSimpleName());
+        if (!WIDGET_CACHE.exists()) {
+            if (!WIDGET_CACHE.mkdirs()) {
+                throw new RuntimeException("Could not create cache directory: " + WIDGET_CACHE.toString());
+            }
+        }
+
         idNum = IdGenerator.getNext();
         tab = new Tab(this);
         gainFocus();
@@ -87,6 +97,15 @@ public class WidgetAdapter extends JPanel {
      */
     public final Runescape getRunescape() {
         return ctx.getRunescape();
+    }
+
+    /**
+     * Gets the cache directory for this widget
+     *
+     * @return the cache directory
+     */
+    public final File getCacheDirectory() {
+        return WIDGET_CACHE;
     }
 
     /**

@@ -1,12 +1,7 @@
 package com.sudoclient.widgets.preloaded.runescape;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.net.URLConnection;
+import java.io.*;
+import java.net.*;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,32 +12,67 @@ import java.util.regex.Pattern;
  * Time: 9:24 AM
  */
 public final class RSClassLoader {
-    private URLClassLoader loader;
-    private final HashMap<String, String> parameters = new HashMap<String, String>();
     private static final Pattern PARAMETER_PATTER = Pattern.compile("<param name=\"(.+)\" value=\"(.+)\">");
-    private URL baseURL;
+    private final HashMap<String, String> parameters = new HashMap<String, String>();
+    private final File CACHE_DIR;
+    private final URL baseURL;
+    private final URLClassLoader loader;
+    private final URI jarFileURI;
+
     private String gamepack;
 
-    public RSClassLoader() {
-        load();
+    public RSClassLoader(File cacheDirectory) throws Exception {
+        CACHE_DIR = cacheDirectory;
+        baseURL = createBaseURL();
+        getParameters(baseURL);
+        jarFileURI = getGamePack();
+        loader = new URLClassLoader(new URL[]{jarFileURI.toURL()});
     }
 
-    private void loadJarClasses() throws MalformedURLException {
-        loader = new URLClassLoader(new URL[]{new URL(baseURL, gamepack)});
+    public URI getJarFileURI() {
+        return jarFileURI;
     }
 
-    private void setBaseURL() throws MalformedURLException {
-        baseURL = new URL("http://world24.runescape.com/");
+    private URL createBaseURL() throws MalformedURLException {
+        //TODO randomize world or get redirected world
+        return new URL("http://world24.runescape.com/");
     }
 
-    public void load() {
-        try {
-            setBaseURL();
-            getParameters(baseURL);
-            loadJarClasses();
-        } catch (Exception e) {
-            e.printStackTrace();
+    private URI getGamePack() throws Exception {
+        File gameJar = new File(CACHE_DIR, gamepack);
+        URL gameJarURL = new URL(baseURL, gamepack);
+
+        if (!gameJar.exists()) {
+            File[] tempFiles = CACHE_DIR.listFiles();
+            if (tempFiles != null) {
+                for (File f : tempFiles) {
+                    if (!f.delete()) {
+                        throw new RuntimeException("Could not delete cache file: " + f.toString());
+                    }
+                }
+            }
+
+            if (!gameJar.createNewFile()) {
+                throw new RuntimeException("Could not create cache file: " + gameJar.toString());
+            }
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(gameJar));
+            BufferedInputStream bis = new BufferedInputStream(gameJarURL.openStream());
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
+            final byte[] buffer = new byte[256];
+            int size;
+
+            while ((size = bis.read(buffer)) != -1) {
+                baos.write(buffer, 0, size);
+            }
+
+            baos.flush();
+            bis.close();
+            bos.write(baos.toByteArray());
+            bos.flush();
+            bos.close();
         }
+
+        return gameJar.toURI();
     }
 
     private void getParameters(URL url) throws IOException, InterruptedException {

@@ -8,6 +8,7 @@ import com.sudoclient.widgets.preloaded.widgetloader.WidgetAdapterLoader;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 public class WidgetManager extends JPanel {
     private final Client ctx;
     private final Tab ADD_TAB;
+    private final File ROOT_CACHE;
     private JPanel tabPanel;
     private ClientMenu menu;
     private JPanel menuBar;
@@ -30,6 +32,7 @@ public class WidgetManager extends JPanel {
         super(new BorderLayout());
         this.ctx = ctx;
 
+        ROOT_CACHE = new File(System.getProperty("user.home"), "SudoClientCache");
         menu = new ClientMenu(ctx);
         WidgetAdapter.setContext(this);
         WidgetAdapterLoader.loadLocalWidgets();
@@ -125,5 +128,9 @@ public class WidgetManager extends JPanel {
         menuBar.updateUI();
 
         return menuBar;
+    }
+
+    public File getCacheDirectory() {
+        return ROOT_CACHE;
     }
 }
