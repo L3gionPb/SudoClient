@@ -81,6 +81,15 @@ public class WidgetAdapter extends JPanel {
     }
 
     /**
+     * Gets the currently running Runescape instance
+     *
+     * @return the currently running Runescape
+     */
+    public final Runescape getRunescape() {
+        return ctx.getRunescape();
+    }
+
+    /**
      * Sets the context for this widget (Internal use only)
      *
      * @param ctx the context

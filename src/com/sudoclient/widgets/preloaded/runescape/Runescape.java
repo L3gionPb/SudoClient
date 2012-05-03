@@ -22,7 +22,7 @@ public final class Runescape extends WidgetAdapter implements Runnable, AppletSt
     private Applet client = new Applet();
     private RSClassLoader loader;
     private JLabel splash;
-    private boolean alive;
+    private boolean alive, loaded;
 
     public Runescape() {
         setBackground(Color.BLACK);
@@ -30,6 +30,7 @@ public final class Runescape extends WidgetAdapter implements Runnable, AppletSt
         add(splash, BorderLayout.CENTER);
 
         alive = true;
+        loaded = false;
         new Thread(this).start();
     }
 
@@ -37,6 +38,7 @@ public final class Runescape extends WidgetAdapter implements Runnable, AppletSt
      * The run void of the loader
      */
     public void run() {
+        loaded = false;
         synchronized (lock) {
             if (client != null) {
                 try {
@@ -66,19 +68,22 @@ public final class Runescape extends WidgetAdapter implements Runnable, AppletSt
                 }
             }
         }
+        loaded = true;
     }
 
     public void reset() {
-        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you wish to restart Runescape?",
-                "Confirm Runescape Restart", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (loaded) {
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you wish to restart Runescape?",
+                    "Confirm Runescape Restart", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
-        if (confirm == JOptionPane.YES_OPTION) {
-            client.stop();
-            client.destroy();
-            removeAll();
-            add(splash, BorderLayout.CENTER);
-            updateUI();
-            new Thread(this).start();
+            if (confirm == JOptionPane.YES_OPTION) {
+                client.stop();
+                client.destroy();
+                removeAll();
+                add(splash, BorderLayout.CENTER);
+                updateUI();
+                new Thread(this).start();
+            }
         }
     }
 
@@ -114,6 +119,10 @@ public final class Runescape extends WidgetAdapter implements Runnable, AppletSt
 
     public Applet getClient() {
         return client;
+    }
+
+    public RSClassLoader getLoader() {
+        return loader;
     }
 
     @Override

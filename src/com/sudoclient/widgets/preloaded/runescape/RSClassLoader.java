@@ -31,7 +31,6 @@ public final class RSClassLoader {
         loader = new URLClassLoader(new URL[]{new URL(baseURL, gamepack)});
     }
 
-    //TODO load random/given world
     private void setBaseURL() throws MalformedURLException {
         baseURL = new URL("http://world24.runescape.com/");
     }

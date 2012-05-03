@@ -2,7 +2,6 @@ package com.sudoclient.widgets;
 
 import com.sudoclient.client.Client;
 import com.sudoclient.client.ClientMenu;
-import com.sudoclient.client.overlayevents.OverlayListener;
 import com.sudoclient.widgets.api.WidgetAdapter;
 import com.sudoclient.widgets.preloaded.runescape.Runescape;
 import com.sudoclient.widgets.preloaded.widgetloader.WidgetAdapterLoader;
@@ -16,10 +15,10 @@ import java.util.ArrayList;
  * Date: 4/22/12
  * Time: 5:56 AM
  */
+
 public class WidgetManager extends JPanel {
     private final Client ctx;
     private final Tab ADD_TAB;
-    //private final OverlayManager overlayManager;
     private JPanel tabPanel;
     private ClientMenu menu;
     private JPanel menuBar;
@@ -32,8 +31,6 @@ public class WidgetManager extends JPanel {
         this.ctx = ctx;
 
         menu = new ClientMenu(ctx);
-        //overlayManager = new OverlayManager(this);
-
         WidgetAdapter.setContext(this);
         WidgetAdapterLoader.loadLocalWidgets();
 
@@ -53,7 +50,6 @@ public class WidgetManager extends JPanel {
     }
 
     public void close() {
-        //overlayManager.kill();
         for (WidgetAdapter widgetAdapter : widgetAdapters) {
             widgetAdapter.onShutdown();
         }
@@ -67,19 +63,11 @@ public class WidgetManager extends JPanel {
     }
 
     public void addWidget(WidgetAdapter widgetAdapter) {
-        if (widgetAdapter instanceof OverlayListener) {
-            //overlayManager.addListener((OverlayListener) widget);
-        }
-
         widgetAdapters.add(widgetAdapter);
         setCurrent(widgetAdapter);
     }
 
     public void removeWidget(WidgetAdapter widgetAdapter) {
-        if (widgetAdapter instanceof OverlayListener) {
-            //overlayManager.removeListener((OverlayListener) widget);
-        }
-
         int index = widgetAdapters.indexOf(widgetAdapter);
         if (widgetAdapters.size() > index + 1) {
             setCurrent(widgetAdapters.get(index + 1));
@@ -113,6 +101,10 @@ public class WidgetManager extends JPanel {
 
     public WidgetAdapter getCurrent() {
         return current;
+    }
+
+    public Runescape getRunescape() {
+        return runescape;
     }
 
     public void packTabPanel() {

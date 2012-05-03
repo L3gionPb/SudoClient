@@ -13,7 +13,6 @@ import javax.swing.*;
 
 @WidgetPreamble(name = "HighScores", author = "Deprecated")
 public class Highscores extends WidgetAdapter {
-    private final static String HIGHSCORES = "http://hiscore.runescape.com/index_lite.ws?player=";
     private JTextField username;
     private JButton search;
 
