@@ -1,7 +1,7 @@
 package com.sudoclient.widgets.api;
 
-import com.sudoclient.widgets.Tab;
-import com.sudoclient.widgets.WidgetManager;
+import com.sudoclient.client.components.Tab;
+import com.sudoclient.client.components.WidgetManager;
 import com.sudoclient.widgets.preloaded.runescape.Runescape;
 
 import javax.swing.*;
@@ -57,12 +57,15 @@ public class WidgetAdapter extends JPanel {
      * Called when the Widget loses focus
      */
     public void loseFocus() {
+        setVisible(false);
     }
 
     /**
      * Called when the Widget gains focus
      */
     public void gainFocus() {
+        setVisible(true);
+        updateUI();
         requestFocus();
     }
 
@@ -88,6 +91,10 @@ public class WidgetAdapter extends JPanel {
      */
     public final WidgetPreamble getPreamble() {
         return preamble;
+    }
+
+    public final Object[] getTableEntry() {
+        return new Object[]{preamble.name(), preamble.description(), preamble.author(), preamble.version()};
     }
 
     /**

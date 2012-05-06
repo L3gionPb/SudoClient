@@ -1,6 +1,6 @@
 package com.sudoclient.client;
 
-import com.sudoclient.widgets.WidgetManager;
+import com.sudoclient.client.components.WidgetManager;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

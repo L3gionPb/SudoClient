@@ -49,14 +49,6 @@ public class RuneWiki extends WidgetAdapter implements HyperlinkListener {
     }
 
     /**
-     * Called when the Widget gains focus
-     */
-    @Override
-    public void gainFocus() {
-        revalidate();
-    }
-
-    /**
      * Called when client is shutting down
      */
     @Override

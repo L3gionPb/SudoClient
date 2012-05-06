@@ -1,13 +1,12 @@
 package com.sudoclient.widgets.preloaded.widgetloader;
 
-import com.sudoclient.widgets.WidgetManager;
+import com.sudoclient.client.components.WidgetManager;
 import com.sudoclient.widgets.api.WidgetAdapter;
 import com.sudoclient.widgets.api.WidgetPreamble;
-import com.sudoclient.widgets.preloaded.reflectionexplorer.ReflectionExplorer;
+import com.sudoclient.widgets.preloaded.worldmap.WorldMap;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
 
 /**
  * User: deprecated
@@ -17,40 +16,37 @@ import java.util.HashMap;
 
 @WidgetPreamble(name = "Widgets", author = "Deprecated")
 public class WidgetAdapterLoader extends WidgetAdapter {
-    private static HashMap<WidgetPreamble, Class<? extends WidgetAdapter>> widgetHashMap;
-    private JPanel viewField;
-    private WidgetManager ctx;
+    private final static String[] headings = {"Widget Name", "Description", "Author", "Version"};
+    private final WidgetManager ctx;
+    private final WidgetTableModel model;
+    private final JTable table;
 
-    public WidgetAdapterLoader(WidgetManager ctx) {
+    public WidgetAdapterLoader(final WidgetManager ctx) {
         this.ctx = ctx;
-        viewField = new JPanel(new BorderLayout());
-        fillViewField();
-        add(viewField, BorderLayout.CENTER);
+        model = new WidgetTableModel();
+        loadLocalWidgets();
+
+        table = new JTable(model.getValues(), headings);
+        table.setCellSelectionEnabled(false);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setRowSelectionAllowed(true);
+        final JScrollPane scrollPane = new JScrollPane(table);
+
+        add(scrollPane, BorderLayout.CENTER);
+        add(new WidgetLoaderComponent(this), BorderLayout.SOUTH);
+        updateUI();
     }
 
-    public void consumeWidget(WidgetPreamble preamble) {
+    public void consumeWidget() {
         try {
             ctx.removeWidget(this);
-            ctx.addWidget(widgetHashMap.get(preamble).newInstance());
+            ctx.addWidget(model.getWidget(table.getSelectedRow()).newInstance());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void loadLocalWidgets() {
-        widgetHashMap = new HashMap<WidgetPreamble, Class<? extends WidgetAdapter>>();
-        //TODO Add more Widgets
-
-        widgetHashMap.put(ReflectionExplorer.class.getAnnotation(WidgetPreamble.class), ReflectionExplorer.class);
-    }
-
-    private void fillViewField() {
-        if (widgetHashMap.size() == 0) {
-            viewField.add(new JLabel("No Widgets have been added yet"), BorderLayout.CENTER);
-        } else {
-            for (WidgetPreamble widgetPreamble : widgetHashMap.keySet()) {
-                viewField.add(new WidgetLoaderComponent(this, widgetPreamble));
-            }
-        }
+    public void loadLocalWidgets() {
+        model.addWidget(WorldMap.class);
     }
 }

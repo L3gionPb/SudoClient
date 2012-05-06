@@ -1,6 +1,6 @@
 package com.sudoclient.widgets.preloaded.imgur;
 
-import com.sudoclient.client.ClientMenu;
+import com.sudoclient.client.components.ClientMenu;
 import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
@@ -60,7 +60,9 @@ public class ScreenShot {
         File folder = new File(System.getProperty("user.home") + FS + "Pictures" + FS + "RSScreenShots");
 
         if (!folder.exists()) {
-            folder.mkdirs();
+            if (!folder.mkdirs()) {
+                throw new RuntimeException("Could not make screenshot directory: " + folder.toString());
+            }
         }
 
         Date date = new Date(System.currentTimeMillis());
@@ -68,7 +70,9 @@ public class ScreenShot {
 
         try {
             if (!f.exists()) {
-                f.createNewFile();
+                if (!f.createNewFile()) {
+                    throw new RuntimeException("Could not create screenshot file: " + f.toString());
+                }
             }
 
             ImageIO.write(image, "png", f);

@@ -111,14 +111,10 @@ public final class Runescape extends WidgetAdapter implements Runnable, AppletSt
      */
     @Override
     public void gainFocus() {
-        setVisible(true);
+        super.gainFocus();
         if (client != null) {
             client.requestFocus();
         }
-    }
-
-    public RSClassLoader getLoader() {
-        return loader;
     }
 
     @Override

@@ -12,12 +12,12 @@ import java.util.regex.Pattern;
  * Time: 9:24 AM
  */
 public final class RSClassLoader {
-    private static final Pattern PARAMETER_PATTER = Pattern.compile("<param name=\"(.+)\" value=\"(.+)\">");
+    private static final Pattern PARAMETER_PATTERN = Pattern.compile("<param name=\"(.+)\" value=\"(.+)\">");
     private final HashMap<String, String> parameters = new HashMap<String, String>();
     private final File CACHE_DIR;
     private final URL baseURL;
-    private final URLClassLoader loader;
     private final URI jarFileURI;
+    private final URLClassLoader loader;
 
     private String gamepack;
 
@@ -29,17 +29,13 @@ public final class RSClassLoader {
         loader = new URLClassLoader(new URL[]{jarFileURI.toURL()});
     }
 
-    public URI getJarFileURI() {
-        return jarFileURI;
-    }
-
     private URL createBaseURL() throws MalformedURLException {
         //TODO randomize world or get redirected world
         return new URL("http://world24.runescape.com/");
     }
 
     private URI getGamePack() throws Exception {
-        File gameJar = new File(CACHE_DIR, gamepack);
+        File gameJar = new File(CACHE_DIR, URLEncoder.encode(gamepack, "UTF-8"));
         URL gameJarURL = new URL(baseURL, gamepack);
 
         if (!gameJar.exists()) {
@@ -55,6 +51,7 @@ public final class RSClassLoader {
             if (!gameJar.createNewFile()) {
                 throw new RuntimeException("Could not create cache file: " + gameJar.toString());
             }
+
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(gameJar));
             BufferedInputStream bis = new BufferedInputStream(gameJarURL.openStream());
             ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
@@ -91,7 +88,7 @@ public final class RSClassLoader {
         Matcher matcher;
 
         while ((s = br.readLine()) != null) {
-            matcher = PARAMETER_PATTER.matcher(s);
+            matcher = PARAMETER_PATTERN.matcher(s);
 
             while (matcher.find()) {
                 parameters.put(matcher.group(1), matcher.group(2));
